@@ -14,14 +14,15 @@ class CreateClientsTable extends Migration
     public function up()
     {
         Schema::create('clients', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
-            $table->string('client_name');
+            $table->id();
+            $table->string('username');
             $table->string('password');
             $table->string('full_name');
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('mobile_number');
-            $table->integer('status');
+            $table->tinyInteger('status')->default('0');
+            $table->tinyInteger('gender')->default('0');
             $table->json('location'); // {country, city, area}
             $table->json('payment_info'); // {creditcard, paypal, ....}
             $table->rememberToken();

@@ -14,9 +14,9 @@ class CreateMediaFilesTable extends Migration
     public function up()
     {
         Schema::create('media_files', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
+            $table->id();
             $table->string('name');
-            $table->string('type'); //{Child:Pic, client:ProfilePic}
+            $table->enum('type',['Child', 'Client', 'Nursery']); //{Child:Pic, client:ProfilePic}
             $table->unsignedBigInteger('model_id');
             $table->timestamps();
         });

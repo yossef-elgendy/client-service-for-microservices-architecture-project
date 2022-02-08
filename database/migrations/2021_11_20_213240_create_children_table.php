@@ -14,7 +14,7 @@ class CreateChildrenTable extends Migration
     public function up()
     {
         Schema::create('children', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
+            $table->id();
             $table->unsignedBigInteger('nursery_id');
             $table->unsignedBigInteger('client_id');
             $table->json('time_table');

@@ -14,9 +14,10 @@ class CreateSubscriptionsTable extends Migration
     public function up()
     {
         Schema::create('subscriptions', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
+            $table->id();
             $table->unsignedBigInteger('child_id');
             $table->unsignedBigInteger('nursery_id');
+            $table->float('amount', 8, 2, true);
             $table->json('activities_id');
             $table->json('courses_id');
             $table->dateTime('start_date');

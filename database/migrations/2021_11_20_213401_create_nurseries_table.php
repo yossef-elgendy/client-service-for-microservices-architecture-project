@@ -19,6 +19,7 @@ class CreateNurseriesTable extends Migration
             $table->json('location');
             $table->json('active_hours');
             $table->integer('status');
+            $table->float('subscription_fee', 7, 2);
             $table->float('rate', 3, 2, true);
             $table->json('social_links');
             $table->timestamps();
