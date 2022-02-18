@@ -3,16 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\ClientResource;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Media;
 use Exception;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -54,6 +53,7 @@ class AuthController extends Controller
             $client = Client::create(Arr::except($fields,['country','city','area','image']));
 
             $token = $client->createToken($fields['email'])->plainTextToken;
+            // event(new Registered($client));
 
             if($request->image){
                 $image = time().'.'.$fields['image']->extension();
@@ -88,24 +88,27 @@ class AuthController extends Controller
 
     public function logout() {
 
-        try{
+        try {
 
-            auth()->user()->tokens()->delete();
+            request()->user()->currentAccessToken()->delete();
 
             return response([
                 'message'=> 'token destroyed'
             ], Response::HTTP_OK);
 
-        }catch(Exception $e){
-            return response()->json(['message' => 'Something wrong happened !', 'error'=>$e->getMessage()]);
+        } catch(Exception $e) {
+            return response()->json(['message' => 'Something wrong happened !', 'error'=>$e->getMessage()], Response::HTTP_NOT_FOUND);
         }
 
     }
 
-    public function login(LoginRequest $request) {
+    public function login(Request $request) {
         try {
 
-            $validator = Validator::make($request->all(), $request->rules());
+            $validator = Validator::make($request->all(), [
+                "email" => "required|string|email",
+                "password"=> "required|string"
+            ]);
 
             if($validator->fails()){
                 return response()->json($validator->getMessageBag(), Response::HTTP_UNAUTHORIZED);

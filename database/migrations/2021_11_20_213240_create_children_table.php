@@ -15,14 +15,18 @@ class CreateChildrenTable extends Migration
     {
         Schema::create('children', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('nursery_id');
+            $table->unsignedBigInteger('nursery_id')->nullable();  // updated 17/2/2022
             $table->unsignedBigInteger('client_id');
-            $table->json('time_table');
-            $table->integer('status');
-            $table->float('rate', 3, 2, true);
-            $table->json('marks');
-            $table->text('issues');
+            $table->string('full_name', 30);// new 17/2/2022
+            $table->integer('age'); // new 17/2/2022
+            $table->json('time_table')->nullable();
+            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('gender')->default(1); // updated 17/2/2022
+            $table->float('rate', 3, 2, true)->nullable(); // updated 17/2/2022
+            $table->json('marks')->nullable(); // updated 17/2/2022
+            $table->text('issues')->nullable(); // updated 17/2/2022
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
