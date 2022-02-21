@@ -17,8 +17,8 @@ class CreateChildrenTable extends Migration
             $table->id();
             $table->unsignedBigInteger('nursery_id')->nullable();  // updated 17/2/2022
             $table->unsignedBigInteger('client_id');
-            $table->string('full_name', 30);// new 17/2/2022
-            $table->integer('age'); // new 17/2/2022
+            $table->string('name', 30);// new 19/2/2022
+            $table->tinyInteger('age'); // new 17/2/2022
             $table->json('time_table')->nullable();
             $table->tinyInteger('status')->default(0);
             $table->tinyInteger('gender')->default(1); // updated 17/2/2022

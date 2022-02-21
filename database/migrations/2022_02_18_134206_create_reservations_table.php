@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRequestsTable extends Migration
+class CreateReservationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,17 @@ class CreateRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('requests', function (Blueprint $table) {
+        Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('nursery_id');
             $table->unsignedBigInteger('client_id');
-            $table->dateTime('responded_at')->nullable();
-            $table->text('response')->nullable();
+            $table->unsignedBigInteger('child_id');
+            $table->tinyInteger('status')->nullable();
+            $table->tinyInteger('provider_end')->default(0);
+            $table->tinyInteger('client_end')->default(0);
+            $table->json('activities')->nullable();
+            $table->json('courses')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -30,6 +35,6 @@ class CreateRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('requests');
+        Schema::dropIfExists('reservations');
     }
 }

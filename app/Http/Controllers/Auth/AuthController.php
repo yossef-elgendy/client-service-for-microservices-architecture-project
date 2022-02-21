@@ -11,6 +11,7 @@ use App\Models\Media;
 use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,6 +54,7 @@ class AuthController extends Controller
             $client = Client::create(Arr::except($fields,['country','city','area','image']));
 
             $token = $client->createToken($fields['email'])->plainTextToken;
+            $cookie = cookie('jwt', $token, 1440);
             // event(new Registered($client));
 
             if($request->image){
@@ -71,12 +73,12 @@ class AuthController extends Controller
 
             $response = [
                 'client' => new ClientResource($client),
-                'token'=> $token,
+                'token' => $token,
                 'image'=> $request->image ? $image : ''
 
             ];
 
-            return response()->json($response, Response::HTTP_CREATED);
+            return response()->json($response, Response::HTTP_CREATED)->withCookie($cookie);
 
         } catch (Exception $e){
             return response([
@@ -91,7 +93,7 @@ class AuthController extends Controller
         try {
 
             request()->user()->currentAccessToken()->delete();
-
+            Cookie::forget('jwt');
             return response([
                 'message'=> 'token destroyed'
             ], Response::HTTP_OK);
@@ -104,7 +106,10 @@ class AuthController extends Controller
 
     public function login(Request $request) {
         try {
-
+            if($request->cookie('jwt')){
+                return response()->json(['message'=> 'You are already logged in'],
+                 Response::HTTP_ALREADY_REPORTED);
+            }
             $validator = Validator::make($request->all(), [
                 "email" => "required|string|email",
                 "password"=> "required|string"
@@ -116,11 +121,16 @@ class AuthController extends Controller
 
             $fields = $validator->validated();
 
-            $client = Client::where('email', $fields['email'])->get();
+            $client = Client::where('email', $request->email)->first();
+
 
             if($client->email) {
-                if(Hash::check($fields['passowrd'], $client->password)){
-                    $token = $client->createToken($fields['email'])->plainTextToken;
+                if(Hash::check($request->password, $client->password)){
+
+                    $token = $client->createToken($request->email)->plainTextToken;
+
+                    $cookie = cookie('jwt', $token, 1440);
+
                     return response()->json([
                         'message' => 'Authorized',
                         'client' => new ClientResource($client),
@@ -140,7 +150,7 @@ class AuthController extends Controller
             }
         } catch (Exception $e) {
 
-            return response()->json(['message' => $e->getMessage()] );
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST );
 
         }
 

@@ -24,7 +24,7 @@ class UpdateChildRequest extends FormRequest
     public function rules()
     {
         return [
-            'full_name'=>'string|max:30',
+            'name'=>'string|max:30',
             'age'=> 'integer|max:13',
             'nursery_id'=>'integer',
             'gender' => 'integer'

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ChildController;
+use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,7 @@ Route::group(['middleware'=> ['auth:sanctum']], function(){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/client', [AuthController::class, 'index']);
     Route::apiResource('children', ChildController::class)->parameters(['children' => 'child']);
+    Route::apiResource('reservations', ReservationController::class);
 });
 Route::post('/register', [AuthController::class ,'register']);
 Route::post('/login', [AuthController::class, 'login']);
