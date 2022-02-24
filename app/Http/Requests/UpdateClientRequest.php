@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateChildRequest extends FormRequest
+class UpdateClientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,11 @@ class UpdateChildRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'nullable|string|max:30',
-            'age'=> 'nullable|integer|max:13',
-            'nursery_id'=>'nullable|integer',
-            'gender' => 'nullable|integer',
+            'username' => 'nullable|unique:providers,username',
+            'password' => 'nullable',
+            'full_name' => 'nullable',
+            'mobile_number' => 'nullable|unique:clients,mobile_number',
+            'gender' => 'nullable|in:0,1',
             'mediafile' => 'nullable|file|mimes:jpg,bmp,png',
         ];
     }

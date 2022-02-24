@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Reservation;
 
 use App\Models\Child;
 use App\Models\Reservation;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ReservationResource extends JsonResource
+class ReservationIndexResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

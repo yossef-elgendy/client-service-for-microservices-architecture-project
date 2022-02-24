@@ -15,9 +15,11 @@ class CreateMediaFilesTable extends Migration
     {
         Schema::create('media_files', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->enum('type',['Child', 'Client', 'Nursery']); //{Child:Pic, client:ProfilePic}
+            $table->string('path');
+            $table->string('type')->default('profile_image');
             $table->unsignedBigInteger('model_id');
+            $table->string('model_type');
+            $table->boolean('is_default')->default(true);
             $table->timestamps();
         });
     }

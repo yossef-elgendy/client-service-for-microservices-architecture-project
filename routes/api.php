@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\ChildController;
+use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Auth\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\SocialAuthController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,18 +19,35 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+///////////////////////// Wituout Auth //////////////////////////
+Route::post('/register', [ClientController::class, 'store']);
+Route::post('/login', [AuthController::class, 'login']);
 
 
 Route::group(['middleware'=> ['auth:sanctum']], function(){
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/client', [AuthController::class, 'index']);
+
     Route::apiResource('children', ChildController::class)->parameters(['children' => 'child']);
+
     Route::apiResource('reservations', ReservationController::class);
+
+    Route::apiResource('clients', ClientController::class)->except(['show', 'store']);
 });
-Route::post('/register', [AuthController::class ,'register']);
-Route::post('/login', [AuthController::class, 'login']);
 
 
+
+
+
+
+
+
+///////////////////////// Social Auth //////////////////////////
+Route::group(['prefix' => 'auth'], function() {
+    Route::get('{provider}/redirect', [SocialAuthController::class, 'redirectToProvider']);
+    Route::get('{provider}/callback', [SocialAuthController::class, 'handleProviderCallback']);
+});
+
+///////////////////////// Email Verification //////////////////////////
 // Route::group(['prefix' => 'email'], function() {
 //     Route::get('/verify', [EmailVerificationController::class, 'notice'])
 //       ->name('verification.notice');
@@ -41,3 +60,5 @@ Route::post('/login', [AuthController::class, 'login']);
 //       ->middleware(['auth:sanctum', 'throttle:6,1'])
 //       ->name('verification.send');
 // });
+
+

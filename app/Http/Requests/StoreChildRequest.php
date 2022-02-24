@@ -24,12 +24,13 @@ class StoreChildRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'string|max:30',
-            'age'=> 'integer|max:13',
-            'nursery_id'=>'integer',
-            'time_table'=> 'array|min:3',
-            'time_table.*'=>'date',
-            'gender' => 'required|integer'
+            'name'=>'required|string|max:30',
+            'age'=> 'required|integer|max:13',
+            'nursery_id'=>'nullable|integer',
+            'time_table'=> 'nullable|array|min:3',
+            'time_table.*'=>'nullable|date',
+            'gender' => 'required|integer',
+            'mediafile' => 'nullable|file|mimes:jpg,bmp,png',
         ];
     }
 }

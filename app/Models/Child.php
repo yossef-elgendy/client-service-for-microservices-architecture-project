@@ -52,4 +52,9 @@ class Child extends Model
         'time_table'=>'array',
     ];
 
+    public function mediafile()
+    {
+        return $this->morphOne(Media::class, 'mediafileable');
+    }
+
 }

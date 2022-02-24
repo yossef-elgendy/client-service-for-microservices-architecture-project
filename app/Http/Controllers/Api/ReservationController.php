@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ReservationResource;
+use App\Http\Resources\Reservation\ReservationIndexResource;
 use App\Jobs\Sent\ReservationCreated;
 use App\Models\Reservation;
 use Exception;
@@ -51,7 +51,7 @@ class ReservationController extends Controller
             ReservationCreated::dispatch($reservation)->onQueue('provider')->onConnection('rabbitmq');
 
             return response()->json([
-                'reservation' => new ReservationResource($reservation)
+                'reservation' => new ReservationIndexResource($reservation)
             ], Response::HTTP_CREATED);
 
 

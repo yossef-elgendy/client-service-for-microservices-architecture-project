@@ -46,12 +46,12 @@ class ReservationCreated implements ShouldQueue
                 'status'=>$this->data['status'],
                 'courses'=> $this->data['courses'],
                 'activities'=> $this->data['activities'],
-
                 'name'=> $child->name,
                 'age'=>$child->age,
                 'gender'=> $child->gender,
                 'rate'=> $child->rate,
             ];
+            
         } catch (Exception $e) {
             return $e->getMessage();
         }

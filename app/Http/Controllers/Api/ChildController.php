@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreChildRequest;
 use App\Http\Requests\UpdateChildRequest;
-use App\Http\Resources\ChildResource;
+use App\Http\Resources\Child\ChildIndexResource;
 use App\Models\Child;
+use App\Models\Media;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
 class ChildController extends Controller
@@ -26,7 +28,7 @@ class ChildController extends Controller
             $children = Child::where('client_id', auth()->user()->id)->get();
 
             return response()->json([
-                'children' => ChildResource::collection($children)
+                'children' => ChildIndexResource::collection($children)
             ],Response::HTTP_ACCEPTED);
 
         } catch(Exception $e) {
@@ -54,11 +56,42 @@ class ChildController extends Controller
             }
 
             $fields = $validator->validated();
-            $fields['client_id'] = auth()->user()->id;
-            $child = Child::create($fields);
+            $fields['client_id'] = $request->user()->id;
+            $child = Child::create(Arr::except($fields, ['mediafile']));
+
+            if($request->mediafile) {
+                $mediafile_data = [
+                  'mediafile' => $request->mediafile,
+                  'mediafile_type' => $request->mediafile_type,
+                  'model_id' => $child->id,
+                  'model_type' => 'nursery',
+                  'is_default' => false
+                ];
+            } else {
+                    $mediafile_data = [
+                    'mediafile' => null,
+                    'mediafile_type' => 'profile_image',
+                    'model_id' => $child->id,
+                    'model_type' => 'nursery',
+                    'is_default' => true
+                    ];
+            }
+
+            $mediafile = new MediafileController();
+            $mediafile_store_response = $mediafile->store($mediafile_data);
+
+            if($mediafile_store_response !== 'success') {
+                return response()->json(
+                [
+                    'message' => 'Mediafile not uploaded! Default file is used instead',
+                    'error' => $mediafile_store_response,
+                    'data' => new ChildIndexResource($child)
+                ],
+                Response::HTTP_CREATED);
+            }
 
             return response()->json([
-                'child' => new ChildResource($child)
+                'child' => new ChildIndexResource($child)
             ], Response::HTTP_CREATED);
 
 
@@ -83,7 +116,7 @@ class ChildController extends Controller
 
             $child = Child::findOrFail($id);
             return response()->json([
-                'child' => new ChildResource($child)
+                'child' => new ChildIndexResource($child)
             ],Response::HTTP_ACCEPTED);
 
         } catch (Exception $e) {
@@ -114,15 +147,39 @@ class ChildController extends Controller
 
             $fields = $validator->validated();
 
-            $child->full_name = $request->full_name ? $fields['full_name']: $child->full_name;
-            $child->age = $request->age ? $fields['age']: $child->age;
-            $child->nursery_id = $request->nursery_id ? $fields['nursery_id']: $child->nursery_id;
-            $child->gender = $request->gender ? $fields['gender']: $child->gender;
+            $child->update(Arr::except($fields, ['mediafile']));
 
-            $child->save();
+            if($request->mediafile){
+
+                $mediafile_data = [
+                    'mediafile' => $request->mediafile,
+                    'mediafile_type' => 'profile_image',
+                    'model_id' => $child->id,
+                    'model_type' => 'client',
+                    'is_default' => false
+                ];
+
+                $mediafile = new MediaFileController();
+                $id = Media::where([
+                    ['model_type', '=', 'child'],
+                    ['model_id', '=', $child->id]
+                    ])->get('id');
+
+                $mediafile_update_response = $mediafile->update($mediafile_data, $id);
+
+                if($mediafile_update_response !== 'success') {
+                    return response()->json(
+                    [
+                        'message' => 'Mediafile not uploaded! Default file is used instead',
+                        'error' => $mediafile_update_response,
+                        'data' => new ChildIndexResource($child)
+                    ],
+                    Response::HTTP_CREATED);
+                }
+            }
 
             return response()->json([
-                'child' => new ChildResource($child),
+                'child' => new ChildIndexResource($child),
             ], Response::HTTP_ACCEPTED);
 
         } catch (Exception $e) {
@@ -140,18 +197,19 @@ class ChildController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         try {
             $child = Child::where([
-                ['client_id', '=',auth()->user()->id],
+                ['client_id', '=', $request->user()->id],
                 ['id','=',$id],
                 ])
             ->firstOrFail();
 
             $child->delete();
 
-            return response()->json(['message' => 'Child info has been deleted'], Response::HTTP_ACCEPTED);
+            return response()->json(['message' => 'Child info has been deleted'],
+             Response::HTTP_ACCEPTED);
 
         } catch (Exception $e) {
             return response()->json([

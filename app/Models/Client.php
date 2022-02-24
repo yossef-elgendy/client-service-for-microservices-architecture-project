@@ -19,7 +19,6 @@ class Client extends Authenticatable // implements MustVerifyEmail
      * @var string[]
      */
     protected $fillable = [
-        'username',
         'full_name',
         'email',
         'mobile_number',
@@ -60,4 +59,21 @@ class Client extends Authenticatable // implements MustVerifyEmail
         'location'=>'array',
         'payment_info'=>'array',
     ];
+
+
+    public function linked_acounts()
+    {
+        return $this->hasMany(LinkedAcount::class,'client_id','id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Child::class,'client_id','id');
+    }
+
+
+    public function mediafile()
+    {
+        return $this->morphOne(Media::class, 'mediafileable');
+    }
 }

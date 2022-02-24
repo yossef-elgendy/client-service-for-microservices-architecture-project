@@ -27,6 +27,10 @@ class CreateChildrenTable extends Migration
             $table->text('issues')->nullable(); // updated 17/2/2022
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('client_id')->references('id')->on('clients')
+            ->onUpdate('cascade')
+            ->onDelete('restrict');
         });
     }
 
