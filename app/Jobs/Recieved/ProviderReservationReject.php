@@ -13,10 +13,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ProviderReservationAccept implements ShouldQueue
+class ProviderReservationReject implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
 
     public $data;
 
@@ -25,10 +24,9 @@ class ProviderReservationAccept implements ShouldQueue
      *
      * @return void
      */
-
     public function __construct($data)
     {
-        $this->data = $data ;
+        $this->data = $data;
     }
 
     /**
@@ -38,21 +36,22 @@ class ProviderReservationAccept implements ShouldQueue
      */
     public function handle()
     {
-        // Need {reservation_id, reply, client_id}
-        
-        try {
+         // Need {reservation_id, reply, client_id}
+
+         try {
             $reservation = Reservation::find($this->data['reservation_id']);
-            $reservation = $reservation->update([
-                'status' => 2,
+            $reservation->update([
+                'status' => 1,
+                'provider_end'=>1,
                 'reply' => $this->data['reply']
             ]);
 
             $client = Client::find($this->data['client_id']);
-            $client->notify(new ReservationInformation($reservation));
+            $client->notify(new ReservationInformation($this->data['reply']));
+            $reservation->delete();
 
         } catch (Exception $e){
             echo $e->getMessage();
         }
-
     }
 }

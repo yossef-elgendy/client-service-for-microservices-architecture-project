@@ -57,4 +57,8 @@ class Child extends Model
         return $this->morphOne(Media::class, 'mediafileable');
     }
 
+    public function client(){
+        return $this->belongsTo(Client::class);
+    }
+
 }

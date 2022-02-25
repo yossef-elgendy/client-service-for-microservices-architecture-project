@@ -21,10 +21,18 @@ class CreateReservationsTable extends Migration
             $table->tinyInteger('status')->nullable();
             $table->tinyInteger('provider_end')->default(0);
             $table->tinyInteger('client_end')->default(0);
+            $table->text('reply')->nullable();
             $table->json('activities')->nullable();
             $table->json('courses')->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('child_id')
+            ->references('id')
+            ->on('children')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+
         });
     }
 

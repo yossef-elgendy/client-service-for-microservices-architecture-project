@@ -17,10 +17,12 @@ class ReservationIndexResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'parent_name'=> auth()->user()->full_name,
+            'id'=>$this->id,
+            'parent_name'=> $request->user()->full_name,
             'nursery_id'=> $this->nursery_id,
-            'child name'=> Child::find($this->child_id)->name,
-            "status" => Reservation::STATUS[$this->status] ?? Reservation::STATUS[0],
+            'child_name'=> Child::find($this->child_id)->name,
+            "status" => Reservation::RESERVATION_STATUS[$this->status] ?? Reservation::RESERVATION_STATUS[0],
+            'provider_response'=> Reservation::PROVIDER_END[$this->provider_end] ?? Reservation::PROVIDER_END[0]
         ];
     }
 }

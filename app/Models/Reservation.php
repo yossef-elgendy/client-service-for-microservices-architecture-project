@@ -27,13 +27,30 @@ class Reservation extends Model
     ];
 
 
-    const STATUS = [
-        1 => "Active",
-        0 => "Inactive"
+    protected $casts = [
+        'activities' => 'array',
+        'courses' => 'array',
     ];
 
-    protected $cast = [
-        'activities' => 'array',
-        'courses' => 'array'
+    const RESERVATION_STATUS = [
+        '0' => 'not_responded',
+        '1' => 'reject',
+        '2' => 'accept'
     ];
+
+    const PROVIDER_END = [
+        '0' => 'not_ended',
+        '1' => 'ended'
+    ];
+
+    const CLIENT_END = [
+        '0' => 'not_ended',
+        '1' => 'ended'
+    ];
+
+
+
+    public function child() {
+        return $this->belongsTo(Child::class);
+    }
 }

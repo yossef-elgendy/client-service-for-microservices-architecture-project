@@ -3,7 +3,6 @@
 namespace App\Jobs\Sent;
 
 use App\Models\Child;
-use Carbon\Traits\Serialization;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -16,6 +15,8 @@ class ReservationCreated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $data;
+    
     /**
      * Create a new job instance.
      *
@@ -51,7 +52,7 @@ class ReservationCreated implements ShouldQueue
                 'gender'=> $child->gender,
                 'rate'=> $child->rate,
             ];
-            
+
         } catch (Exception $e) {
             return $e->getMessage();
         }

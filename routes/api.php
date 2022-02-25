@@ -29,7 +29,7 @@ Route::group(['middleware'=> ['auth:sanctum']], function(){
 
     Route::apiResource('children', ChildController::class)->parameters(['children' => 'child']);
 
-    Route::apiResource('reservations', ReservationController::class);
+    Route::apiResource('reservations', ReservationController::class)->except(['destroy']);
 
     Route::apiResource('clients', ClientController::class)->except(['show', 'store']);
 });
