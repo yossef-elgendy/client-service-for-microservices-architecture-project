@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialAuthController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
@@ -32,6 +33,10 @@ Route::group(['middleware'=> ['auth:sanctum']], function(){
     Route::apiResource('reservations', ReservationController::class)->except(['destroy']);
 
     Route::apiResource('clients', ClientController::class)->except(['show', 'store']);
+
+    Route::get('/notifications', function(Request $request) {
+        return response()->json($request->user()->notifications);
+    });
 });
 
 
