@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 ///////////////////////// Wituout Auth //////////////////////////
 Route::post('/register', [ClientController::class, 'store']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -32,12 +33,17 @@ Route::group(['middleware'=> ['auth:sanctum']], function(){
 
     Route::apiResource('reservations', ReservationController::class)->except(['destroy']);
 
+    Route::apiResource("mediafiles", MediafileController::class)
+    ->except(['show']);
+
     Route::apiResource('clients', ClientController::class)->except(['show', 'store']);
 
     Route::get('/notifications', function(Request $request) {
         return response()->json($request->user()->notifications);
     });
 });
+
+
 
 
 
