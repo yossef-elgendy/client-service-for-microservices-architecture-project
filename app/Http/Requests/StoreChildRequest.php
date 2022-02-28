@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Child;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreChildRequest extends FormRequest
@@ -29,7 +30,7 @@ class StoreChildRequest extends FormRequest
             'nursery_id'=>'nullable|integer',
             'time_table'=> 'nullable|array|min:3',
             'time_table.*'=>'nullable|date',
-            'gender' => 'required|integer',
+            'gender' => 'required|integer|in:'.implode(',', array_keys(Child::GENDER)),
             'mediafile' => 'nullable|file|mimes:jpg,bmp,png',
         ];
     }

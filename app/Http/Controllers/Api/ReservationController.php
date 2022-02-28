@@ -12,6 +12,7 @@ use App\Models\Reservation;
 use App\Models\Child;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,7 +29,7 @@ class ReservationController extends Controller
     public function index(Request $request)
     {
         try{
-            
+
             $reservations = Reservation::where([['client_id', '=', $request->user()->id]])->get();
 
             return response()->json([
@@ -68,7 +69,22 @@ class ReservationController extends Controller
 
             $fields = $validator->validated();
             $fields['client_id'] = $request->user()->id;
-            $reservation = Reservation::create($fields);
+            if($request->child_id){
+
+                $reservation = Reservation::create($fields);
+
+            } else {
+
+                $child = Child::create([
+                    'name'=> $fields['name'],
+                    'age'=> $fields['age'],
+                    'gender'=> $fields['gender'],
+                    'client_id'=> $fields['client_id']
+                ]);
+
+                $fields['child_id'] = $child->id;
+                $reservation = Reservation::create(Arr::except($fields,['name','age','gender']));
+            }
 
             ReservationCreated::dispatch($reservation)
             ->onQueue('provider')
