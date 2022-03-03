@@ -64,7 +64,7 @@ class ChildController extends Controller
                   'mediafile' => $request->mediafile,
                   'mediafile_type' => $request->mediafile_type,
                   'model_id' => $child->id,
-                  'model_type' => 'nursery',
+                  'model_type' => 'child',
                   'is_default' => false
                 ];
             } else {
@@ -72,7 +72,7 @@ class ChildController extends Controller
                     'mediafile' => null,
                     'mediafile_type' => 'profile_image',
                     'model_id' => $child->id,
-                    'model_type' => 'nursery',
+                    'model_type' => 'child',
                     'is_default' => true
                     ];
             }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\ProviderDispatched;
 
 use App\Models\Client;
 use App\Models\Reservation;

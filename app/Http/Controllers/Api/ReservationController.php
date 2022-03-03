@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
 use App\Http\Resources\Reservation\ReservationIndexResource;
-use App\Jobs\ClientReservationReject;
-use App\Jobs\ReservationCreated;
+use App\Jobs\ClientDispatched\ClientReservationReject;
+use App\Jobs\ClientDispatched\ReservationCreated;
 use App\Models\Reservation;
 use App\Models\Child;
 use Exception;
@@ -61,7 +61,8 @@ class ReservationController extends Controller
                  Response::HTTP_BAD_REQUEST);
             }
 
-            if($request->user()->id != Child::find($request->child_id)->get('client_id')){
+
+            if($request->user()->id != Child::find($request->child_id)->client_id){
                 return response()->json(['message'=>'Error the child don\'t exist.'],
                 Response::HTTP_NOT_FOUND);
             }

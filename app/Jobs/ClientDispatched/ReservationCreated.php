@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\ClientDispatched;
 
 use App\Models\Child;
 use Exception;
