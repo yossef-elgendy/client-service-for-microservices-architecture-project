@@ -29,9 +29,7 @@ class StoreReservationRequest extends FormRequest
             'child_id'=>'required_without:name, age, gender|integer',
             'courses' => 'nullable|array',
             'activities' => 'nullable|array',
-            'name'=>'required_without:child_id|string|max:30',
-            'age' => 'required_without:child_id|integer|max:13',
-            'gender' => 'required_without:child_id|integer|in:'.implode(',', array_keys(Child::GENDER))
+           
         ];
     }
 }

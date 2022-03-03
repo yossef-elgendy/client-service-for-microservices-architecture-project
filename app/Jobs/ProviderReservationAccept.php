@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Recieved;
+namespace App\Jobs;
 
 use App\Models\Client;
 use App\Models\Reservation;
@@ -39,7 +39,7 @@ class ProviderReservationAccept implements ShouldQueue
     public function handle()
     {
         // Need {reservation_id, reply, client_id}
-        
+
         try {
             $reservation = Reservation::find($this->data['reservation_id']);
             $reservation = $reservation->update([

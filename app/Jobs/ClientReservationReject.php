@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Sent;
+namespace App\Jobs;
 
 use Exception;
 use Illuminate\Bus\Queueable;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Recieved;
+namespace App\Jobs;
 
 use App\Models\Client;
 use App\Models\Reservation;

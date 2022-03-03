@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
 use App\Http\Resources\Reservation\ReservationIndexResource;
-use App\Jobs\Sent\ClientReservationReject;
-use App\Jobs\Sent\ReservationCreated;
+use App\Jobs\ClientReservationReject;
+use App\Jobs\ReservationCreated;
 use App\Models\Reservation;
 use App\Models\Child;
 use Exception;
@@ -69,22 +69,10 @@ class ReservationController extends Controller
 
             $fields = $validator->validated();
             $fields['client_id'] = $request->user()->id;
-            if($request->child_id){
 
-                $reservation = Reservation::create($fields);
 
-            } else {
+            $reservation = Reservation::create($fields);
 
-                $child = Child::create([
-                    'name'=> $fields['name'],
-                    'age'=> $fields['age'],
-                    'gender'=> $fields['gender'],
-                    'client_id'=> $fields['client_id']
-                ]);
-
-                $fields['child_id'] = $child->id;
-                $reservation = Reservation::create(Arr::except($fields,['name','age','gender']));
-            }
 
             ReservationCreated::dispatch($reservation)
             ->onQueue('provider')

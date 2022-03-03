@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\Sent;
+namespace App\Jobs;
 
 use App\Models\Child;
 use Exception;
@@ -16,7 +16,7 @@ class ReservationCreated implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $data;
-    
+
     /**
      * Create a new job instance.
      *
