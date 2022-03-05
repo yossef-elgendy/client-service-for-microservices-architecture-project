@@ -18,7 +18,7 @@ class ProviderReservationAccept implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 
-    public $data;
+    protected $data;
 
     /**
      * Create a new job instance.

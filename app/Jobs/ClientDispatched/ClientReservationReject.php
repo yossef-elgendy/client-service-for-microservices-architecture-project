@@ -14,7 +14,7 @@ class ClientReservationReject implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $data;
+    protected $data;
     /**
      * Create a new job instance.
      *
@@ -32,15 +32,7 @@ class ClientReservationReject implements ShouldQueue
      */
     public function handle()
     {
-        try {
-
-            return ['reservation_id' => $this->data->id];
-
-        } catch (Exception $e) {
-
-            return $e->getMessage();
-
-        }
+      //
 
     }
 }

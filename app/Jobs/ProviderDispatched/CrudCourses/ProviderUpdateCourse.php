@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Jobs\ClientDispatched;
+namespace App\Jobs\ProviderDispatched\CrudCourses;
 
-use App\Models\Child;
-use Exception;
+use App\Models\Course;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,17 +10,17 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ReservationCreated implements ShouldQueue
+class ProviderUpdateCourse implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    protected $data;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
+    protected $data;
+
     public function __construct($data)
     {
         $this->data = $data ;
@@ -34,7 +33,9 @@ class ReservationCreated implements ShouldQueue
      */
     public function handle()
     {
-
-        //
+        // data needed:-
+        // ['id', 'course']
+        $course = Course::find($this->data['id']);
+        $course->update($this->data['course']);
     }
 }

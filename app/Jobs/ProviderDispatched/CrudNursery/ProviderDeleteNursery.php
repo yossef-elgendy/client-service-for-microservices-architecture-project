@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Jobs\ClientDispatched;
+namespace App\Jobs\ProviderDispatched\CrudNursery;
 
-use App\Models\Child;
-use Exception;
+
+use App\Models\Nursery;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,20 +11,19 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ReservationCreated implements ShouldQueue
+class ProviderDeleteNursery implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    protected $data;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
+    protected $data;
     public function __construct($data)
     {
-        $this->data = $data ;
+        $this->data = $data;
     }
 
     /**
@@ -35,6 +34,9 @@ class ReservationCreated implements ShouldQueue
     public function handle()
     {
 
-        //
+        // data needed:-
+        // ['id']
+        $nursery = Nursery::find($this->data);
+        $nursery->delete();
     }
 }

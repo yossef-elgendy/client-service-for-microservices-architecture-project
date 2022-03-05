@@ -14,14 +14,14 @@ class CreateNurseriesTable extends Migration
     public function up()
     {
         Schema::create('nurseries', function (Blueprint $table) {
-            $table->id();
-            $table->string('nursery_name');
+            $table->unsignedBigInteger('id')->primary();
+            $table->string('name');
             $table->json('location');
-            $table->json('active_hours');
-            $table->integer('status');
+            $table->json('active_hours')->nullable();
+            $table->tinyInteger('status');
             $table->float('subscription_fee', 7, 2);
-            $table->float('rate', 3, 2, true);
-            $table->json('social_links');
+            $table->float('rate', 3, 2, true)->nullable();
+            $table->json('social_links')->nullable();
             $table->timestamps();
         });
     }

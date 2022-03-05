@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Test\Constraint\ResponseIsSuccessful;
 
 class ChildController extends Controller
 {
@@ -29,7 +30,7 @@ class ChildController extends Controller
 
             return response()->json([
                 'children' => ChildIndexResource::collection($children)
-            ],Response::HTTP_ACCEPTED);
+            ], Response::HTTP_ACCEPTED);
 
         } catch(Exception $e) {
 

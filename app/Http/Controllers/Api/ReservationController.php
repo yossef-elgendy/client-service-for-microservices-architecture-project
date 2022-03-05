@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
+use App\Http\Resources\Reservation\ReservationCreatedJobResource;
 use App\Http\Resources\Reservation\ReservationIndexResource;
 use App\Jobs\ClientDispatched\ClientReservationReject;
 use App\Jobs\ClientDispatched\ReservationCreated;
@@ -14,7 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
 
 class ReservationController extends Controller
 {
@@ -58,13 +59,13 @@ class ReservationController extends Controller
 
             if ($validator->fails()) {
                 return response()->json(['error'=>$validator->getMessageBag()],
-                 Response::HTTP_BAD_REQUEST);
+                 400);
             }
 
 
             if($request->user()->id != Child::find($request->child_id)->client_id){
                 return response()->json(['message'=>'Error the child don\'t exist.'],
-                Response::HTTP_NOT_FOUND);
+                400);
             }
 
 
@@ -75,14 +76,14 @@ class ReservationController extends Controller
             $reservation = Reservation::create($fields);
 
 
-            ReservationCreated::dispatch($reservation)
+            ReservationCreated::dispatch(new ReservationCreatedJobResource($reservation))
             ->onQueue('provider')
             ->onConnection('rabbitmq');
 
             return response()->json([
                 'message'=> 'Your reservation request will be sent to the nursery.',
                 'reservation' => new ReservationIndexResource($reservation)
-            ], Response::HTTP_CREATED);
+            ], 201);
 
 
 
@@ -90,7 +91,7 @@ class ReservationController extends Controller
             return response()->json([
                 'Error !!' => $e->getMessage(),
                 'Line'=> $e->getLine()
-            ], Response::HTTP_NOT_FOUND);
+            ], 404);
         }
 
     }
@@ -159,7 +160,7 @@ class ReservationController extends Controller
                 if($request->client_end){
                     $reservation->update(['client_end'=> $data['client_end']]);
 
-                    ClientReservationReject::dispatch($reservation)
+                    ClientReservationReject::dispatch($reservation->id)
                     ->onQueue('provider')
                     ->onConnection('rabbitmq');
 

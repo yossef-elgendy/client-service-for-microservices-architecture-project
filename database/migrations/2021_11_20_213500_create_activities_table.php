@@ -14,11 +14,15 @@ class CreateActivitiesTable extends Migration
     public function up()
     {
         Schema::create('activities', function (Blueprint $table) {
-            $table->id();
-            $table->string('activity_name');
+            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('nursery_id');
+            $table->string('name');
             $table->text('description');
-            $table->float('cost', 6, 2);
             $table->timestamps();
+
+            $table->foreign('nursery_id')->references('id')->on('nurseries')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
         });
     }
 

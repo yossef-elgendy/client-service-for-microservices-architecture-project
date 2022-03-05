@@ -14,13 +14,18 @@ class CreateCoursesTable extends Migration
     public function up()
     {
         Schema::create('courses', function (Blueprint $table) {
-            $table->id();
-            $table->string('course_name');
+            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('nursery_id');
+            $table->string('name');
             $table->text('description');
-            $table->json('age_range');
+            $table->json('age_range')->nullable();
             $table->float('cost', 6, 2);
-            $table->float('rate', 3, 2, true);
+            $table->float('rate', 3, 2, true)->nullable();
             $table->timestamps();
+
+            $table->foreign('nursery_id')->references('id')->on('nurseries')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
         });
     }
 
