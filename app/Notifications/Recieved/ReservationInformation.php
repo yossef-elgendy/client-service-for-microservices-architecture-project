@@ -12,7 +12,7 @@ class ReservationInformation extends Notification
 {
     use Queueable;
 
-    public $data;
+    public $reservation;
     /**
      * Create a new notification instance.
      *
@@ -20,7 +20,7 @@ class ReservationInformation extends Notification
      */
     public function __construct($data)
     {
-        $this->data = $data;
+        $this->rservation = $data;
     }
 
     /**
@@ -43,6 +43,6 @@ class ReservationInformation extends Notification
      */
     public function toArray($notifiable)
     {
-        return $this->data;
+        return $this->reservation;
     }
 }

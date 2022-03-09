@@ -40,15 +40,17 @@ class ProviderReservationReject implements ShouldQueue
 
          try {
             $reservation = Reservation::find($this->data['reservation_id']);
+
             $reservation->update([
                 'status' => 1,
-                'provider_end'=>1,
+                'provider_end'=> $this->data['provider_end'] ?? 0,
                 'reply' => $this->data['reply']
             ]);
 
-            $client = Client::find($this->data['client_id']);
-            $client->notify(new ReservationInformation($this->data['reply']));
-            $reservation->delete();
+            $client = Client::find($reservation->client_id);
+            $client->notify(new ReservationInformation($reservation));
+
+            if(isset($this->data['provider_end'])) $reservation->delete();
 
         } catch (Exception $e){
             echo $e->getMessage();

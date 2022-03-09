@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Notifications\Recieved\ReservationInformation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User;
 
 class Reservation extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Prunable;
 
     /**
      * The attributes that are mass assignable.
@@ -52,5 +55,20 @@ class Reservation extends Model
 
     public function child() {
         return $this->belongsTo(Child::class);
+    }
+
+    public function prunable()
+    {
+        return static::where('created_at', '<=', now()->subMonth());
+    }
+
+    protected function pruning()
+    {
+        $this->update([
+            'reply' => "Deleted due to no response."
+        ]);
+
+        $client = User::find($this->client_id);
+        $client->notify(new ReservationInformation($this));
     }
 }
