@@ -19,7 +19,9 @@ class SocialAuthController extends Controller
             return $validated;
         }
 
-        return Socialite::driver($provider)->stateless()->redirect();
+        return Response()->json([
+            'url' => Socialite::driver($provider)->stateless()->redirect()->getTargetUrl()
+        ], 200);
     }
 
     public function handleProviderCallback($provider)
@@ -68,8 +70,8 @@ class SocialAuthController extends Controller
 
     protected function validateProvider($provider)
     {
-        if (!in_array($provider, ['github', 'google'])) {
-            return response()->json(['error' => 'Please login using facebook, github or google'],
+        if (!in_array($provider, ['google'])) {
+            return response()->json(['error' => 'Please login using google'],
              Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }

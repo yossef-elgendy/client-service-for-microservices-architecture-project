@@ -38,7 +38,8 @@ class Reservation extends Model
     const RESERVATION_STATUS = [
         '0' => 'not_responded',
         '1' => 'reject',
-        '2' => 'accept'
+        '2' => 'accept',
+        '3' => 'done'
     ];
 
     const PROVIDER_END = [

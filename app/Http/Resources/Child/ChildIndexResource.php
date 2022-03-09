@@ -34,7 +34,7 @@ class ChildIndexResource extends JsonResource
           )->first();
 
         return [
-            'full_name' => $this->full_name,
+            'name' => $this->name,
             'age' => $this->age,
             'parent_name'=> Client::where('id', $this->client_id)->get('full_name'),
             "status" => Child::STATUS[$this->status] ?? Child::STATUS[0],

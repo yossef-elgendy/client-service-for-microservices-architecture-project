@@ -25,7 +25,6 @@ class UpdateReservationRequest extends FormRequest
     public function rules()
     {
         return  [
-            'status' => 'required|in:'.implode(',', array_keys(Reservation::RESERVATION_STATUS)),
             'client_end' => 'required_if:status,0,2|in:'.implode(',', array_keys(Reservation::CLIENT_END)),
           ];
     }

@@ -26,10 +26,8 @@ class ClientController extends Controller
     {
         try{
             return response()->json([
-                'client'=> ClientShowResource::collection($request->user())
+                'client'=> new ClientShowResource($request->user())
            ],Response::HTTP_OK);
-            // $clients = Client::paginate(2);
-            // return response()->json($clients);
 
         } catch (Exception $e) {
             return response()->json([
