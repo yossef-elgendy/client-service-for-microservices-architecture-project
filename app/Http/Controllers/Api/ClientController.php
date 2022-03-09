@@ -198,4 +198,5 @@ class ClientController extends Controller
 			return response()->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
 		}
     }
+
 }
