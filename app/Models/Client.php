@@ -19,6 +19,7 @@ class Client extends Authenticatable // implements MustVerifyEmail
      * @var string[]
      */
     protected $fillable = [
+        'username',
         'full_name',
         'email',
         'mobile_number',
