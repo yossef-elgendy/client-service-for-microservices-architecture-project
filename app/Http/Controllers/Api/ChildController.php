@@ -65,15 +65,15 @@ class ChildController extends Controller
                   'mediafile' => $request->mediafile,
                   'mediafile_type' => $request->mediafile_type,
                   'model_id' => $child->id,
-                  'model_type' => 'child',
+                  'model_type' => 'App\Child',
                   'is_default' => false
                 ];
             } else {
                     $mediafile_data = [
                     'mediafile' => null,
-                    'mediafile_type' => 'profile_image',
+                    'mediafile_type' => 'child_image',
                     'model_id' => $child->id,
-                    'model_type' => 'child',
+                    'model_type' => 'App\Child',
                     'is_default' => true
                     ];
             }
@@ -98,7 +98,7 @@ class ChildController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'Error !!' => $e->getMessage()
+                'error' => $e->getMessage()
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -122,7 +122,7 @@ class ChildController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'Error !!' => $e->getMessage()
+                'error' => $e->getMessage()
             ], Response::HTTP_NOT_FOUND);
         }
     }
@@ -154,15 +154,15 @@ class ChildController extends Controller
 
                 $mediafile_data = [
                     'mediafile' => $request->mediafile,
-                    'mediafile_type' => 'profile_image',
+                    'mediafile_type' => 'child_image',
                     'model_id' => $child->id,
-                    'model_type' => 'client',
+                    'model_type' => 'App\Child',
                     'is_default' => false
                 ];
 
                 $mediafile = new MediaFileController();
                 $id = Media::where([
-                    ['model_type', '=', 'child'],
+                    ['model_type', '=', 'App\Child'],
                     ['model_id', '=', $child->id]
                     ])->get('id');
 
@@ -186,7 +186,7 @@ class ChildController extends Controller
         } catch (Exception $e) {
 
             return response()->json([
-                'Error !!' => $e->getMessage()
+                'error' => $e->getMessage()
             ], Response::HTTP_NOT_FOUND);
 
         }
@@ -214,7 +214,7 @@ class ChildController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'Error !!' => $e->getMessage()
+                'error' => $e->getMessage()
             ], Response::HTTP_NOT_FOUND);
         }
 

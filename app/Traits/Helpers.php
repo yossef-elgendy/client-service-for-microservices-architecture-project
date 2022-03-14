@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Media;
+
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 

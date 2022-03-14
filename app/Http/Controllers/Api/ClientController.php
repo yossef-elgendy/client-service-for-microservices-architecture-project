@@ -121,13 +121,13 @@ class ClientController extends Controller
                         'mediafile' => $request->mediafile,
                         'mediafile_type' => 'profile_image',
                         'model_id' => $client->id,
-                        'model_type' => 'client',
+                        'model_type' => 'App\Client',
                         'is_default' => false
                     ];
 
                     $mediafile = new MediaFileController();
                     $id = Media::where([
-                        ['model_type', '=', 'client'],
+                        ['model_type', '=', 'App\Client'],
                         ['model_id', '=', $client->id]
                         ])->get('id');
 
