@@ -15,10 +15,16 @@ class CreateReviewsTable extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('nursery_id');
+            $table->unsignedBigInteger('client_id');
+            $table->unsignedBigInteger('model_id');
+            $table->string('model_type'); // nursery, courseNursery
             $table->text('content');
-            $table->float('rate', 3, 2, true);
+            $table->integer('rate')->nullable();
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
         });
     }
 

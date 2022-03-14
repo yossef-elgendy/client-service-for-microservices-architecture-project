@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ChildController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\ReservationController;
+use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use Illuminate\Http\Request;
@@ -34,6 +35,9 @@ Route::group(['middleware'=> ['auth:sanctum']], function(){
     Route::apiResource('reservations', ReservationController::class)->except(['destroy']);
 
     Route::apiResource("mediafiles", MediafileController::class)
+    ->except(['show']);
+
+    Route::apiResource("reviews", ReviewController::class)
     ->except(['show']);
 
     Route::apiResource('clients', ClientController::class)->except(['show', 'store']);
