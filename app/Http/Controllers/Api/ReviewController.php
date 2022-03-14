@@ -37,7 +37,7 @@ class ReviewController extends Controller
                     ['model_type', '=', 'App\Nursery']
                     ])->get();
             }
-
+            
             return response()->json([
                 'reviews' => ReviewResource::collection($reviews)
             ], Response::HTTP_ACCEPTED);
