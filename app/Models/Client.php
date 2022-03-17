@@ -19,6 +19,7 @@ class Client extends Authenticatable // implements MustVerifyEmail
      * @var string[]
      */
     protected $fillable = [
+        'username',
         'full_name',
         'email',
         'mobile_number',
@@ -70,6 +71,12 @@ class Client extends Authenticatable // implements MustVerifyEmail
     {
         return $this->hasMany(Child::class,'client_id','id');
     }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class,'client_id','id');
+    }
+
 
 
     public function mediafile()

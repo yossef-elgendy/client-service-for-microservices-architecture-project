@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Reservation;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateReservationRequest extends FormRequest
+class StoreReviewRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +23,11 @@ class UpdateReservationRequest extends FormRequest
      */
     public function rules()
     {
-        return  [
-            'client_end' => 'required_if:status,0,2|in:'.implode(',', array_keys(Reservation::CLIENT_END)),
-          ];
+        return [
+            'model_id' => 'required|integer',
+            'model_type'=>'required|string|in:nursery,course',
+            'content'=>'required|string|max:400',
+            'rate'=>'required|integer|between:1,5'
+        ];
     }
 }

@@ -150,9 +150,8 @@ class ReservationController extends Controller
 			}
 
             $data = $validator->validated();
-            $reservation = Reservation::find($id);
 
-            if($data['status'] == 1){
+            if($reservation->status == 1){
                 $reservation->delete();
                 return response()->json(['error' => 'Nursery canceled this reservation already.'], Response::HTTP_ALREADY_REPORTED);
             } else {
@@ -187,6 +186,10 @@ class ReservationController extends Controller
              Response::HTTP_NOT_FOUND);
 		}
     }
+
+
+
+
 
 
 }

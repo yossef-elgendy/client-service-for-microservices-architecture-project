@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Client;
 
 use App\Http\Resources\Child\ChildIndexResource;
+use App\Http\Resources\Reservation\ReservationIndexResource;
 use App\Models\Client;
 use App\Models\Media;
 use App\Traits\Helpers;
@@ -32,6 +33,7 @@ class ClientShowResource extends JsonResource
           )->first();
 
         $children = ChildIndexResource::collection($this->children);
+        $reservations = ReservationIndexResource::collection($this->reservations);
 
         return [
             "username" => $this->username,
@@ -42,6 +44,7 @@ class ClientShowResource extends JsonResource
             "location"=> $this->location,
             'profile_image' => $this->mediafileDownload($profile_image),
             'children' => $children,
+            'reservations'=> $reservations
         ];
     }
 }
