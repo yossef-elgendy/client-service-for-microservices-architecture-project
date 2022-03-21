@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ChildController;
 use App\Http\Controllers\Api\ClientController;
+use App\Http\Controllers\Api\PaytabsController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Auth\AuthController;
@@ -51,7 +52,10 @@ Route::group(['middleware'=> ['auth:sanctum']], function(){
 
 
 
-
+Route::group(['prefix' => 'payment'], function () {
+    Route::get('/', [PaytabsController::class, 'index']);
+    Route::post('/response', [PaytabsController::class, 'response']);
+  });
 
 
 
