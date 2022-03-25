@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ChildController;
 use App\Http\Controllers\Api\ClientController;
+use App\Http\Controllers\Api\PayMobController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Auth\AuthController;
@@ -49,7 +50,10 @@ Route::group(['middleware'=> ['auth:sanctum']], function(){
 
 
 
-
+Route::group(['prefix' => 'payment'], function() {
+    Route::post('{orderId}/pay/redirect', [PayMobController::class, 'checkingOut']);
+    Route::get('pay/callback', [PayMobController::class, 'processedCallback']);
+});
 
 
 

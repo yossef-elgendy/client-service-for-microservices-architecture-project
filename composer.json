@@ -4,6 +4,12 @@
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/yossef-elgendy/laravel-paymob.git"
+        }
+    ],
     "require": {
         "php": "^7.3|^8.0",
         "fruitcake/laravel-cors": "^2.0",
@@ -15,7 +21,8 @@
         "laravel/telescope": "^4.7",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
-        "vladimir-yuldashev/laravel-queue-rabbitmq": "^11.3"
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^11.3",
+        "baklysystems/laravel-paymob": "dev-master"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

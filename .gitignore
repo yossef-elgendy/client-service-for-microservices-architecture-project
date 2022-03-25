@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
+ngrok.exe
 .env
 app.todo
 .env.backup
@@ -16,3 +17,4 @@ yarn-error.log
 /.vscode
 docker-compose.yaml
 Dockerfile
+

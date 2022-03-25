@@ -13,6 +13,8 @@ class ReservationInformation extends Notification
     use Queueable;
 
     public $reservation;
+    public $order;
+    
     /**
      * Create a new notification instance.
      *
@@ -20,7 +22,8 @@ class ReservationInformation extends Notification
      */
     public function __construct($data)
     {
-        $this->rservation = $data;
+        $this->rservation = $data['reservation'];
+        $this->order = $data['order'];
     }
 
     /**
@@ -43,6 +46,9 @@ class ReservationInformation extends Notification
      */
     public function toArray($notifiable)
     {
-        return $this->reservation;
+        return [
+            'reservation' => $this->reservation,
+            'order' => $this->order
+        ];
     }
 }

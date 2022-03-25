@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Jobs\ProviderDispatched\CrudCourses;
+namespace App\Jobs\ClientDispatched;
 
-use App\Models\Course;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,20 +9,19 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ProviderDeleteCourse implements ShouldQueue
+class ClientPaid implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $data;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    protected $data;
-
     public function __construct($data)
     {
-        $this->data = $data ;
+        $this->data = $data;
     }
 
     /**
@@ -33,9 +31,6 @@ class ProviderDeleteCourse implements ShouldQueue
      */
     public function handle()
     {
-        // data needed:-
-        // ['id']
-        $course = Course::find($this->data);
-        $course->delete();
+        //
     }
 }

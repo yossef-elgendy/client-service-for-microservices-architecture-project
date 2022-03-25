@@ -16,7 +16,8 @@ class CreateClientsTable extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('username')->unique()->nullable();
-            $table->string('full_name')->nullable();
+            $table->string('firstname')->nullable();
+            $table->string('lastname')->nullable();
             $table->string('password')->nullable();
             $table->string('email')->unique();
             $table->string('mobile_number')->unique()->nullable();

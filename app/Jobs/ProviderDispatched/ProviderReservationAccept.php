@@ -3,6 +3,7 @@
 namespace App\Jobs\ProviderDispatched;
 
 use App\Models\Client;
+use App\Models\Order;
 use App\Models\Reservation;
 use App\Notifications\Recieved\ReservationInformation;
 use Exception;
@@ -38,7 +39,7 @@ class ProviderReservationAccept implements ShouldQueue
      */
     public function handle()
     {
-        // Need {reservation_id, reply, client_id}
+        // Need {reservation_id, reply, client_id, courses:[{id,cost}, {id,cost}], subscription_fee}
 
         try {
             $reservation = Reservation::find($this->data['reservation_id']);
@@ -47,8 +48,26 @@ class ProviderReservationAccept implements ShouldQueue
                 'reply' => $this->data['reply']
             ]);
 
+            $totalCost = $this->data['subscription_fee'] ?? 0;
+            if(isset($this->data['courses']))
+            {
+                foreach($this->data['courses'] as $course){
+                    $totalCost += $course->cost;
+                }
+            }
+
+
+            $order = Order::create([
+                'reservation_id'=> $this->data['reservation_id'],
+                'totalCost'=>$totalCost,
+            ]);
+
             $client = Client::find($this->data['client_id']);
-            $client->notify(new ReservationInformation($reservation));
+            
+            $client->notify(new ReservationInformation([
+                'reservation' => $reservation,
+                'order' => $order
+            ]));
 
         } catch (Exception $e){
             echo $e->getMessage();

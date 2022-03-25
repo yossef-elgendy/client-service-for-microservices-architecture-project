@@ -7,7 +7,6 @@ use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\Http\Resources\Client\ClientShowResource;
 use App\Models\Client;
-use App\Models\Media;
 use Illuminate\Support\Facades\Validator;
 use Exception;
 use Illuminate\Http\Request;
@@ -115,34 +114,7 @@ class ClientController extends Controller
 
                 $client->update(Arr::except($data, ['mediafile']));
 
-                if($request->mediafile){
 
-                    $mediafile_data = [
-                        'mediafile' => $request->mediafile,
-                        'mediafile_type' => 'profile_image',
-                        'model_id' => $client->id,
-                        'model_type' => 'App\Client',
-                        'is_default' => false
-                    ];
-
-                    $mediafile = new MediaFileController();
-                    $id = Media::where([
-                        ['model_type', '=', 'App\Client'],
-                        ['model_id', '=', $client->id]
-                        ])->get('id');
-
-                    $mediafile_update_response = $mediafile->update($mediafile_data, $id);
-
-                    if($mediafile_update_response !== 'success') {
-                        return response()->json(
-                        [
-                            'message' => 'Mediafile not uploaded! Default file is used instead',
-                            'error' => $mediafile_update_response,
-                            'data' => new ClientShowResource($client)
-                        ],
-                        Response::HTTP_CREATED);
-                    }
-                }
 
 
                 return response()->json(new ClientShowResource($client), Response::HTTP_CREATED);

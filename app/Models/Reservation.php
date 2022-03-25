@@ -72,4 +72,8 @@ class Reservation extends Model
         $client = User::find($this->client_id);
         $client->notify(new ReservationInformation($this));
     }
+
+    public function order(){
+        return $this->hasOne(Order::class);
+    }
 }
