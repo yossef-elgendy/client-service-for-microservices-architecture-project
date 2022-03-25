@@ -18,7 +18,7 @@ class ReservationIndexResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'parent_name'=> $request->user()->full_name,
+            'parent_name'=> $request->user()->firstname.' '.$request->user()->lastname,
             'nursery_id'=> $this->nursery_id,
             'child_name'=> Child::find($this->child_id)->name,
             "status" => Reservation::RESERVATION_STATUS[$this->status] ?? Reservation::RESERVATION_STATUS[0],

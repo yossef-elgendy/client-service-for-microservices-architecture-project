@@ -21,28 +21,18 @@ class ClientShowResource extends JsonResource
      */
     public function toArray($request)
     {
-        $profile_image = Media::whereHasMorph(
-            'mediafileable',
-            [Client::class],
-            function(Builder $query) {
-              $query->where([
-                ['model_id', '=', $this->id],
-                ['type', '=', 'profile_image']
-              ]);
-            }
-          )->first();
+
 
         $children = ChildIndexResource::collection($this->children);
         $reservations = ReservationIndexResource::collection($this->reservations);
 
         return [
             "username" => $this->username,
-            "full_name" => $this->full_name,
+            "full_name" => $this->firstname.' '.$this->lastname,
             "email" => $this->email,
             "status" => Client::STATUS[$this->status] ?? Client::STATUS[0],
             "gender" => Client::GENDER[$this->gender] ?? Client::GENDER[0],
             "location"=> $this->location,
-            'profile_image' => $this->mediafileDownload($profile_image),
             'children' => $children,
             'reservations'=> $reservations
         ];

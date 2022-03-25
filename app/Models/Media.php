@@ -37,13 +37,11 @@ class Media extends Model
       ];
 
       const MODEL_TYPE = [
-        'client',
-        'child',
+        'App\Child' => 'child',
       ];
 
       const DEFAULT_IMAGE_NAME = [
-        'client'  => 'default_client.png',
-        'child'    => 'default_child.png',
+        'App\Child'    => 'default_child.png',
       ];
 
       public function mediafileable()

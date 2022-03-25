@@ -25,7 +25,8 @@ class StoreClientRequest extends FormRequest
     {
         return [
             "username" => "required|string",
-            "full_name" => "required|string",
+            "firstname" => "required|string",
+            "lastname" => "required|string",
             "email" => "required|string|unique:clients,email",
             "mobile_number"=>"string|unique:clients,mobile_number|min:11|max:11",
             "password"=> "required|string|min:8|confirmed",

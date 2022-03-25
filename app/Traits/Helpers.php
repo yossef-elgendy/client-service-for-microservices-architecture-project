@@ -28,7 +28,7 @@ trait Helpers
     public function mediafileUpload($mediafile_data)
     {
         try {
-        $path = '/uploads/'.$mediafile_data['model_type'].'/'.$mediafile_data['mediafile_type'];
+        $path = '/uploads/'. Media::MODEL_TYPE[$mediafile_data['model_type']] .'/'.$mediafile_data['mediafile_type'];
 
         if($mediafile_data['is_default']) {
             $path = $path . '/' . Media::DEFAULT_IMAGE_NAME[$mediafile_data['model_type']];
@@ -62,7 +62,7 @@ trait Helpers
             'is_default' => $mediafile_data['is_default']
         ];
         } catch(\Exception $e) {
-        return $e->getMessage();
+            return $e->getMessage();
         }
     }
 
