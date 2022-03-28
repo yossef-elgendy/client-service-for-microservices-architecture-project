@@ -112,7 +112,8 @@ class ClientController extends Controller
                     $data['password'] = Hash::make($data['password']);
                 }
 
-                $client->update(Arr::except($data, ['mediafile']));
+
+                $client->update($data);
 
 
 

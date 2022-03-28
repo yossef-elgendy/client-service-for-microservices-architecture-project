@@ -24,7 +24,7 @@ class UpdateClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'nullable|unique:providers,username',
+            'username' => 'unique:clients,username|nullable',
             'password' => 'nullable',
             'fullname' => 'nullable',
             'mobile_number' => 'nullable|unique:clients,mobile_number',
