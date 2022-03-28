@@ -6,6 +6,7 @@
 ngrok.exe
 .env
 app.todo
+payment.todo
 .env.backup
 .phpunit.result.cache
 docker-compose.override.yml

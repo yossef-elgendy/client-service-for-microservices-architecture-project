@@ -46,14 +46,16 @@ Route::group(['middleware'=> ['auth:sanctum']], function(){
     Route::get('/notifications', function(Request $request) {
         return response()->json($request->user()->notifications);
     });
+
+    Route::group(['prefix' => 'payment'], function() {
+        Route::post('{orderId}/pay/redirect', [PayMobController::class, 'checkingOut']);
+        Route::get('pay/callback', [PayMobController::class, 'processedCallback']);
+    });
+
 });
 
 
 
-Route::group(['prefix' => 'payment'], function() {
-    Route::post('{orderId}/pay/redirect', [PayMobController::class, 'checkingOut']);
-    Route::get('pay/callback', [PayMobController::class, 'processedCallback']);
-});
 
 
 

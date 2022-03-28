@@ -60,7 +60,7 @@ class Reservation extends Model
 
     public function prunable()
     {
-        return static::where('created_at', '<=', now()->subMonth());
+        return static::where('created_at', '<=', now()->subDays(10));
     }
 
     protected function pruning()
