@@ -17,7 +17,7 @@ class ReviewResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'client_full_name' => $request->user()->full_name,
+            'client_fullname' => $request->user()->fullname,
             'rate' => $this->rate,
             'content' => $this->content,
             'type' => Review::TYPE[$this->model_type]

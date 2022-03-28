@@ -33,12 +33,12 @@ class ChildIndexResource extends JsonResource
             }
           )->first();
 
-        
+
         $client =  Client::findOrFail($this->client_id);
         return [
             'name' => $this->name,
             'age' => $this->age,
-            'parent_name'=> $client->firstname.' '.$client->lastname,
+            'parent_name'=> $client->fullname,
             "status" => Child::STATUS[$this->status] ?? Child::STATUS[0],
             "gender" => Child::GENDER[$this->gender] ?? Child::GENDER[0],
             'time_table' => $this->issues,

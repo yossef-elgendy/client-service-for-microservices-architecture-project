@@ -24,6 +24,7 @@ class PayMobController extends Controller
     {
         $order       = Order::find($orderId);
         $user = Client::findOrFail($order->reservation->client_id);
+        $fullname = explode(' ', $user->fullname);
         # code... get order user.
         $auth        = PayMob::authPaymob(); // login PayMob servers
         if (property_exists($auth, 'detail')) { // login to PayMob attempt failed.
@@ -56,8 +57,8 @@ class PayMobController extends Controller
             $paymobOrder->id,
             // For billing data
             $user->email, //optional
-            $user->firstname, //optional
-            $user->lastname, // optional
+            $fullname[0], //firstname optional
+            $fullname[count($fullname)-1], // lastname optional
             $user->mobile_number, //optional
 
         );

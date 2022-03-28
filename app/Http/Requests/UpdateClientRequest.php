@@ -26,7 +26,7 @@ class UpdateClientRequest extends FormRequest
         return [
             'username' => 'nullable|unique:providers,username',
             'password' => 'nullable',
-            'full_name' => 'nullable',
+            'fullname' => 'nullable',
             'mobile_number' => 'nullable|unique:clients,mobile_number',
             'gender' => 'nullable|in:0,1',
             'mediafile' => 'nullable|file|mimes:jpg,bmp,png',
