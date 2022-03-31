@@ -26,6 +26,7 @@ class StoreReviewRequest extends FormRequest
         return [
             'model_id' => 'required|integer',
             'model_type'=>'required|string|in:nursery,course',
+            'client_id'=> 'required|integer',
             'content'=>'required|string|max:400',
             'rate'=>'required|integer|between:1,5'
         ];

@@ -23,61 +23,31 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-///////////////////////// Wituout Auth //////////////////////////
-Route::post('/register', [ClientController::class, 'store']);
-Route::post('/login', [AuthController::class, 'login']);
 
+Route::apiResource('children', ChildController::class)->parameters(['children' => 'child']);
 
-Route::group(['middleware'=> ['auth:sanctum']], function(){
-    Route::post('/logout', [AuthController::class, 'logout']);
+Route::apiResource('reservations', ReservationController::class)->except(['destroy']);
 
-    Route::apiResource('children', ChildController::class)->parameters(['children' => 'child']);
+Route::apiResource("mediafiles", MediafileController::class)
+->except(['show']);
 
-    Route::apiResource('reservations', ReservationController::class)->except(['destroy']);
+Route::apiResource("reviews", ReviewController::class)
+->except(['show']);
 
-    Route::apiResource("mediafiles", MediafileController::class)
-    ->except(['show']);
+Route::apiResource('clients', ClientController::class)->except(['show', 'store']);
 
-    Route::apiResource("reviews", ReviewController::class)
-    ->except(['show']);
+Route::get('/notifications', function(Request $request) {
+    return response()->json($request->user()->notifications);
+});
 
-    Route::apiResource('clients', ClientController::class)->except(['show', 'store']);
-
-    Route::get('/notifications', function(Request $request) {
-        return response()->json($request->user()->notifications);
-    });
-
-    Route::group(['prefix' => 'payment'], function() {
-        Route::post('{orderId}/pay/redirect', [PayMobController::class, 'checkingOut']);
-        Route::get('pay/callback', [PayMobController::class, 'processedCallback']);
-    });
-
+Route::group(['prefix' => 'payment'], function() {
+    Route::post('{orderId}/pay/redirect', [PayMobController::class, 'checkingOut']);
+    Route::get('pay/callback', [PayMobController::class, 'processedCallback']);
 });
 
 
 
 
 
-
-
-///////////////////////// Social Auth //////////////////////////
-Route::group(['prefix' => 'auth'], function() {
-    Route::get('{provider}/redirect', [SocialAuthController::class, 'redirectToProvider']);
-    Route::get('{provider}/callback', [SocialAuthController::class, 'handleProviderCallback']);
-});
-
-///////////////////////// Email Verification //////////////////////////
-// Route::group(['prefix' => 'email'], function() {
-//     Route::get('/verify', [EmailVerificationController::class, 'notice'])
-//       ->name('verification.notice');
-
-//     Route::get('/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
-//       ->middleware(['auth:sanctum', 'signed'])
-//       ->name('verification.verify');
-
-//     Route::post('/verification-notification', [EmailVerificationController::class, 'send'])
-//       ->middleware(['auth:sanctum', 'throttle:6,1'])
-//       ->name('verification.send');
-// });
 
 

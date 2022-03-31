@@ -26,10 +26,10 @@ class StoreReservationRequest extends FormRequest
     {
         return[
             'nursery_id'=>'required|integer',
-            'child_id'=>'required_without:name, age, gender|integer',
+            'child_id'=>'required|integer',
             'courses' => 'nullable|array',
             'activities' => 'nullable|array',
-           
+            'client_id'=>'required|integer'
         ];
     }
 }

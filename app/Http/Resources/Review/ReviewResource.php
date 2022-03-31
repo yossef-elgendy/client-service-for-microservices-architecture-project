@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Review;
 
+use App\Models\Client;
 use App\Models\Review;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,9 +16,10 @@ class ReviewResource extends JsonResource
      */
     public function toArray($request)
     {
+        $client = Client::find($this->client_id);
         return [
             'id' => $this->id,
-            'client_fullname' => $request->user()->fullname,
+            'client_fullname' => $client->fullname,
             'rate' => $this->rate,
             'content' => $this->content,
             'type' => Review::TYPE[$this->model_type]

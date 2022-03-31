@@ -37,7 +37,7 @@ class ReviewController extends Controller
                     ['model_type', '=', 'App\Nursery']
                     ])->get();
             }
-            
+
             return response()->json([
                 'reviews' => ReviewResource::collection($reviews)
             ], Response::HTTP_ACCEPTED);
@@ -75,7 +75,6 @@ class ReviewController extends Controller
                 $fields['model_type'] = 'App\CourseNursery';
             }
 
-            $fields['client_id'] =  $request->user()->id;
             $review = Review::create($fields);
 
             return response()->json([
@@ -103,9 +102,9 @@ class ReviewController extends Controller
         try{
 
             $review = Review::find($id);
-            if($review->client_id !=  $request->user()->id){
+            if($review->client_id !=  $request->client_id){
                 return response()->json([
-                    'error' => 'You cannot update this review'
+                    'error' => 'You cannot update this review.'
                 ], Response::HTTP_NOT_ACCEPTABLE);
             }
 
@@ -144,7 +143,7 @@ class ReviewController extends Controller
         try{
 
             $review = Review::find($id);
-            if($review->client_id !=  $request->user()->id){
+            if($review->client_id !=  $request->client_id){
                 return response()->json(['error' => 'You cannot delete this review'], Response::HTTP_NOT_ACCEPTABLE);
             }
 

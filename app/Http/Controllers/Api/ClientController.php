@@ -23,9 +23,10 @@ class ClientController extends Controller
      */
     public function index(Request $request)
     {
+
         try{
             return response()->json([
-                'client'=> new ClientShowResource($request->user())
+                'client'=> new ClientShowResource(Client::find($request->client_id))
            ],Response::HTTP_OK);
 
         } catch (Exception $e) {
@@ -52,7 +53,6 @@ class ClientController extends Controller
                 }
 
                 $fields = $validator->validated();
-                $fields['password'] = Hash::make($fields['password']);
                 $fields['location'] = [
                     'country' => $request->country,
                     'city' => $request->city,
@@ -61,14 +61,12 @@ class ClientController extends Controller
 
                 $client = Client::create(Arr::except($fields,['country','city','area','image']));
 
-                $token = $client->createToken($fields['email'])->plainTextToken;
-                // event(new Registered($client));
+
 
 
 
             $response = [
                 'client' => new ClientShowResource($client),
-                'token' => $token,
             ];
 
             return response()->json($response, Response::HTTP_CREATED);
@@ -92,14 +90,8 @@ class ClientController extends Controller
     public function update(UpdateClientRequest $request, $id)
     {
         try {
-                if( !$client = Client::find($id) ){
-                    return response()->json(['error' => 'You can not update this client.'], 401);
-                }
 
-                if($client->id !== $request->user()->id) {
-                    return response()->json(['error' => 'You can not update this client.'], 401);
-                }
-
+                $client = Client::find($id);
                 $validator = Validator::make($request->all(), $request->rules());
                 if($validator->fails()) {
                     return response()->json(['error' => $validator->getMessageBag()],
@@ -107,10 +99,6 @@ class ClientController extends Controller
                 }
 
                 $data = $validator->validated();
-
-                if($request->password) {
-                    $data['password'] = Hash::make($data['password']);
-                }
 
 
                 $client->update($data);
@@ -135,13 +123,8 @@ class ClientController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-			if(! $client = Client::find($id)) {
-				return response()->json(['error' => 'You can not delete this client.'], 401);
-			}
+            $client = Client::find($id);
 
-			if($client->id !== $request->user()->id) {
-				return response()->json(['error' => 'You can not delete this client.'], 401);
-			}
 
             $children_count = $client->loadCount('children');
 
@@ -158,9 +141,6 @@ class ClientController extends Controller
 
             }
 
-
-            $mediafile = new MediafileController();
-            $mediafile->destroy_all($client->id, 'client');
 
             $client->delete();
 

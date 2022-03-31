@@ -25,7 +25,8 @@ class UpdateReviewRequest extends FormRequest
     {
         return [
             'content'=>'nullable|string|max:400',
-            'rate'=>'nullable|integer|between:1,5'
+            'rate'=>'nullable|integer|between:1,5',
+            'client_id'=>'required|integer'
         ];
     }
 }

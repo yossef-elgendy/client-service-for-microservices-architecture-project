@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Reservation;
 
 use App\Models\Child;
+use App\Models\Client;
 use App\Models\Reservation;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,9 +17,10 @@ class ReservationIndexResource extends JsonResource
      */
     public function toArray($request)
     {
+        $client = Client::find($this->client_id);
         return [
             'id'=>$this->id,
-            'parent_name'=> $request->user()->fullname,
+            'parent_name'=> $client->fullname,
             'nursery_id'=> $this->nursery_id,
             'child_name'=> Child::find($this->child_id)->name,
             "status" => Reservation::RESERVATION_STATUS[$this->status] ?? Reservation::RESERVATION_STATUS[0],

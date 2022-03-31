@@ -20,13 +20,14 @@ class ChildController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $children = Child::where('client_id', auth()->user()->id)->get();
+            $children = Child::where('client_id', $request->client_id)->get();
 
             return response()->json([
                 'children' => ChildIndexResource::collection($children)
@@ -57,7 +58,6 @@ class ChildController extends Controller
             }
 
             $fields = $validator->validated();
-            $fields['client_id'] = $request->user()->id;
             $child = Child::create(Arr::except($fields, ['mediafile']));
 
             if($request->mediafile) {
@@ -111,11 +111,18 @@ class ChildController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         try {
 
-            $child = Child::findOrFail($id);
+            if(!$child = Child::find($id)){
+                return response()->json(['error' => 'Child not found.'], Response::HTTP_NOT_FOUND);
+            }
+
+            if($request->client_id != $child->client_id){
+                return response()->json(['error' => 'You can not show this child.'], 401);
+            }
+
             return response()->json([
                 'child' => new ChildIndexResource($child)
             ],Response::HTTP_ACCEPTED);
@@ -138,7 +145,13 @@ class ChildController extends Controller
     {
         try {
 
-            $child = Child::findOrFail($id);
+            if(!$child = Child::find($id)){
+                return response()->json(['error' => 'Child not found.'], Response::HTTP_NOT_FOUND);
+            }
+
+            if($request->client_id != $child->client_id){
+                return response()->json(['error' => 'You can not update this child.'], 401);
+            }
 
             $validator = Validator::make($request->all(), $request->rules());
 
@@ -201,11 +214,15 @@ class ChildController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $child = Child::where([
-                ['client_id', '=', $request->user()->id],
-                ['id','=',$id],
-                ])
-            ->firstOrFail();
+
+            if(!$child = Child::find($id)){
+                return response()->json(['error' => 'Child not found.'], Response::HTTP_NOT_FOUND);
+            }
+
+            if($request->client_id != $child->client_id){
+                return response()->json(['error' => 'You can not delete this child.'], 401);
+            }
+
 
             $child->delete();
 

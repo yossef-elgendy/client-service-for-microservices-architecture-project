@@ -31,7 +31,9 @@ class ReservationController extends Controller
     {
         try{
 
-            $reservations = Reservation::where([['client_id', '=', $request->user()->id]])->get();
+            $reservations = Reservation::where(
+                [['client_id', '=', $request->client_id]]
+                )->get();
 
             return response()->json([
                 'reservations' => $reservations
@@ -63,14 +65,14 @@ class ReservationController extends Controller
             }
 
 
-            if($request->user()->id != Child::find($request->child_id)->client_id){
+            if($request->client_id != Child::find($request->child_id)->client_id){
                 return response()->json(['message'=>'Error the child don\'t exist.'],
                 400);
             }
 
 
             $fields = $validator->validated();
-            $fields['client_id'] = $request->user()->id;
+            $fields['client_id'] = $request->client_id;
 
 
             $reservation = Reservation::create($fields);
@@ -108,7 +110,7 @@ class ReservationController extends Controller
     {
         try {
             $reservation = Reservation::find($id);
-			if(! $reservation || $reservation->client_id != $request->user()->id ) {
+			if(! $reservation || $reservation->client_id != $request->client_id ) {
 				return response()->json(['error' => 'You can not show this reservation.'],
                  Response::HTTP_UNAUTHORIZED);
 			}
@@ -133,7 +135,7 @@ class ReservationController extends Controller
     {
         try {
             $reservation = Reservation::find($id);
-			if(! $reservation || $reservation->client_id != $request->user()->id ) {
+			if(! $reservation || $reservation->client_id != $request->client_id ) {
 				return response()->json(['error' => 'You can not update this reservation.'],
                  Response::HTTP_UNAUTHORIZED);
 			}

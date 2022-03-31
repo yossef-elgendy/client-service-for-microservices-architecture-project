@@ -2,17 +2,17 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\Sent\ReservationCreated;
+use App\Jobs\ServicesDispatched\ServiceRegister;
 use Illuminate\Console\Command;
 
-class ReservationCreatedCommand extends Command
+class ApplicationBootCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ping:job';
+    protected $signature = 'app:boot';
 
     /**
      * The console command description.
@@ -38,12 +38,12 @@ class ReservationCreatedCommand extends Command
      */
     public function handle()
     {
-        
-        ReservationCreated::dispatch([
-            'client_id' => 1,
-            'nursery_id' => 1,
-            'child_id' => 1,
-        ])->onConnection('rabbitmq')->onQueue('client');
-
+        ServiceRegister::dispatch([
+            'name' => env('SERVICE_NAME', 'client'),
+            'ip_address' => env('SERVICE_IP_ADDRESS', 'client_client'),
+            'port' => env('SERVICE_PORT', '8002'),
+            'base_uri' => env('APP_URL', 'http://localhost:8002'),
+            'secret_token' => env('SECRET_TOKEN', ''),
+          ])->onConnection('rabbitmq')->onQueue('api_gateway');
     }
 }

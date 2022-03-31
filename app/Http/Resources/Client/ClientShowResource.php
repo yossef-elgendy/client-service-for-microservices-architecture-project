@@ -27,9 +27,7 @@ class ClientShowResource extends JsonResource
         $reservations = ReservationIndexResource::collection($this->reservations);
 
         return [
-            "username" => $this->username,
             "full_name" => $this->fullname,
-            "email" => $this->email,
             "status" => Client::STATUS[$this->status] ?? Client::STATUS[0],
             "gender" => Client::GENDER[$this->gender] ?? Client::GENDER[0],
             "location"=> $this->location,

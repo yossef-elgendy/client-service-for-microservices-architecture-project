@@ -25,6 +25,7 @@ class UpdateChildRequest extends FormRequest
     {
         return [
             'name'=>'nullable|string|max:30',
+            'client_id'=>'required|integer',
             'age'=> 'nullable|integer|max:13',
             'nursery_id'=>'nullable|integer',
             'gender' => 'nullable|integer',
