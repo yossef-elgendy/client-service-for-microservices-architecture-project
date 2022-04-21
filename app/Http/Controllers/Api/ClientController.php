@@ -100,6 +100,9 @@ class ClientController extends Controller
 
                 $data = $validator->validated();
 
+                if($request->gender && $client->gender != null){
+                    $data =  Arr::except($data, ['gender']);
+                }
 
                 $client->update($data);
 

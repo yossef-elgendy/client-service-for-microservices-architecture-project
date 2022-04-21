@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Client;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreClientRequest extends FormRequest
@@ -24,8 +25,11 @@ class StoreClientRequest extends FormRequest
     public function rules()
     {
         return [
-            "fullname" => "required|string",
-            "mobile_number"=>"string|unique:clients,mobile_number|min:11|max:11",
+            "id"=>'required|unique:clients,id',
+            // "fullname" => "required|string",
+            "login_type"=> "required|in:".implode(',', array_keys(Client::LOGIN_TYPE)),
+            "email"=>"required_if:login_type,EM|email|unique:clients,email",
+            "mobile_number"=>"required_if:login_type,MO|unique:clients,mobile_number",
             "country"=> "max:30",
             "city"=> "max:30",
             "area"=> "max:30",

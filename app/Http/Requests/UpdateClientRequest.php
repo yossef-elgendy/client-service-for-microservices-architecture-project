@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Client;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateClientRequest extends FormRequest
@@ -24,12 +25,12 @@ class UpdateClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'unique:clients,username|nullable',
-            'password' => 'nullable',
+            'username' => 'nullable|unique:clients,username,'.$this->route('id').',id',
             'fullname' => 'nullable',
-            'mobile_number' => 'nullable|unique:clients,mobile_number',
+            'login_type'=>'nullable|in:'.implode(',', array_keys(Client::LOGIN_TYPE)),
+            'mobile_number' => 'nullable|unique:clients,mobile_number,'.$this->route('id').',id',
+            "email"=> 'nullable|unique:clients,email,'.$this->route('id').',id',
             'gender' => 'nullable|in:0,1',
-            'mediafile' => 'nullable|file|mimes:jpg,bmp,png',
         ];
     }
 }

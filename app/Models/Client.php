@@ -45,6 +45,13 @@ class Client extends Authenticatable // implements MustVerifyEmail
         0 => "Inactive"
     ];
 
+    const LOGIN_TYPE = [
+        'EM' => "email",
+        'MO' => "mobile",
+        'FB' => "facebook",
+        'GO' => "google",
+    ];
+
     const GENDER = [
         0 => "male",
         1 => "female"
