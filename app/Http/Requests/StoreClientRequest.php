@@ -29,7 +29,7 @@ class StoreClientRequest extends FormRequest
             // "fullname" => "required|string",
             "login_type"=> "required|in:".implode(',', array_keys(Client::LOGIN_TYPE)),
             "email"=>"required_if:login_type,EM|email|unique:clients,email",
-            "mobile_number"=>"required_if:login_type,MO|unique:clients,mobile_number",
+            "phone"=>"required_if:login_type,MO|unique:clients,phone",
             "country"=> "max:30",
             "city"=> "max:30",
             "area"=> "max:30",

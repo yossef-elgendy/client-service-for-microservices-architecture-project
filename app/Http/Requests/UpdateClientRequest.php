@@ -28,7 +28,7 @@ class UpdateClientRequest extends FormRequest
             'username' => 'nullable|unique:clients,username,'.$this->route('id').',id',
             'fullname' => 'nullable',
             'login_type'=>'nullable|in:'.implode(',', array_keys(Client::LOGIN_TYPE)),
-            'mobile_number' => 'nullable|unique:clients,mobile_number,'.$this->route('id').',id',
+            'phone' => 'nullable|unique:clients,phone,'.$this->route('id').',id',
             "email"=> 'nullable|unique:clients,email,'.$this->route('id').',id',
             'gender' => 'nullable|in:0,1',
         ];

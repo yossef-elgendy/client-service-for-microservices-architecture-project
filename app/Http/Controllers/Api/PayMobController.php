@@ -59,7 +59,7 @@ class PayMobController extends Controller
             $user->email, //optional
             $fullname[0], //firstname optional
             $fullname[count($fullname)-1], // lastname optional
-            $user->mobile_number, //optional
+            $user->phone, //optional
 
         );
 

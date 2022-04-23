@@ -17,7 +17,7 @@ class CreateClientsTable extends Migration
             $table->unsignedBigInteger('id')->primary();
             $table->string('username')->unique()->nullable();
             $table->string('fullname')->nullable();
-            $table->string('mobile_number')->unique()->nullable();
+            $table->string('phone')->unique()->nullable();
             $table->string('email')->unique()->nullable();
             $table->tinyInteger('status')->default('0');
             $table->tinyInteger('gender')->nullable();

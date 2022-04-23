@@ -22,7 +22,7 @@ class Client extends Authenticatable // implements MustVerifyEmail
         'username',
         'fullname',
         'email',
-        'mobile_number',
+        'phone',
         'login_type',
         'location',
         'payment_info',
