@@ -24,6 +24,7 @@ class CreateReservationsTable extends Migration
             $table->text('reply')->nullable();
             $table->json('activities')->nullable();
             $table->json('courses')->nullable();
+            $table->tinyInteger('type')->default('0');
             $table->softDeletes();
             $table->timestamps();
 

@@ -20,6 +20,7 @@ class ReservationCreatedJobResource extends JsonResource
             'reservation_id' => $this->id,
             'client_id'=> $this->client_id,
             'nursery_id'=> $this->nursery_id,
+            'reservation_type' => $this->type,
 
             'status' => $this->status,
             'client_end'=> $this->client_end,
@@ -28,7 +29,8 @@ class ReservationCreatedJobResource extends JsonResource
             'name'=> $child->name,
             'age'=> $child->age,
             'rate'=> $child->rate,
-            'gender'=> $child->gender
+            'gender'=> $child->gender,
+
 
         ];
     }
