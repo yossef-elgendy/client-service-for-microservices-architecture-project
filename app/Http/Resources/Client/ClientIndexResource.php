@@ -21,6 +21,7 @@ class ClientIndexResource extends JsonResource
     {
 
         return [
+            "id"=>$this->id,
             "fullname" => $this->fullname,
             "status" => Client::STATUS[$this->status] ?? Client::STATUS[0],
             "gender" => Client::GENDER[$this->gender] ?? Client::GENDER[0],

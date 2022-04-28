@@ -25,9 +25,18 @@ class ClientController extends Controller
     {
 
         try{
-            return response()->json([
-                'client'=> new ClientShowResource(Client::find($request->client_id))
-           ],Response::HTTP_OK);
+            $client = Client::find($request->client_id);
+
+            if($client){
+                return response()->json([
+                    'client'=> new ClientShowResource($client)
+               ],Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'client'=> null
+               ],Response::HTTP_OK);
+            }
+
 
         } catch (Exception $e) {
             return response()->json([

@@ -36,6 +36,7 @@ class ChildIndexResource extends JsonResource
 
         $client =  Client::findOrFail($this->client_id);
         return [
+            "id"=>$this->id,
             'name' => $this->name,
             'age' => $this->age,
             'parent_name'=> $client->fullname,
