@@ -26,27 +26,37 @@ class ReviewController extends Controller
     {
         try {
 
-            if($request->model_type = "course"){
+            if($request->model_type == "course"){
                 $reviews  = Review::where([
                     ['model_type', '=', 'App\CourseNursery'],
                     ['model_id', '=', $request->model_id]
                     ])->get();
-            } elseif ($request->model_type = "nursery") {
+
+                    return response()->json([
+                        'reviews' => ReviewResource::collection($reviews)
+                    ], Response::HTTP_ACCEPTED);
+            }
+
+            if ($request->model_type == "nursery") {
                 $reviews  = Review::where([
                     ['model_type', '=', 'App\Nursery'],
                     ['model_id', '=', $request->model_id]
                     ])->get();
+
+                    return response()->json([
+                        'reviews' => ReviewResource::collection($reviews),
+                    ], Response::HTTP_ACCEPTED);
             }
 
             return response()->json([
-                'reviews' => ReviewResource::collection($reviews)
+                'reviews' => []
             ], Response::HTTP_ACCEPTED);
+
 
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
 
         }
-
 
     }
 
