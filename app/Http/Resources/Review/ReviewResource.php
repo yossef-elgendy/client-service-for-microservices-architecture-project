@@ -16,6 +16,7 @@ class ReviewResource extends JsonResource
      */
     public function toArray($request)
     {
+
         $client = Client::find($this->client_id);
         return [
             'id' => $this->id,

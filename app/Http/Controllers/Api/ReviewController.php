@@ -112,7 +112,8 @@ class ReviewController extends Controller
         try{
 
             $review = Review::findOrFail($id);
-            if($review->client_id !=  $request->client_id){
+
+            if($review->client_id !=  intval($request->client_id)){
                 return response()->json([
                     'error' => 'You cannot update this review.',
                     'status'=>Response::HTTP_NOT_ACCEPTABLE
@@ -131,16 +132,17 @@ class ReviewController extends Controller
 
             $fields = $validator->validated();
 
-            $review = $review->update($fields);
+            $review->update($fields);
 
             return response()->json([
-                'review' => new ReviewResource($review),
+                'review' => new ReviewResource($review) ,
                 'status'=> Response::HTTP_ACCEPTED
             ]);
 
         }catch(Exception $e){
             return response()->json([
                 'error' => $e->getMessage(),
+                'line' => $e->getLine(),
                 'status'=>Response::HTTP_NOT_FOUND
             ]);
         }
@@ -158,6 +160,7 @@ class ReviewController extends Controller
         try{
 
             $review = Review::findOrFail($id);
+
             if($review->client_id !=  $request->client_id){
 
                 return response()->json([
