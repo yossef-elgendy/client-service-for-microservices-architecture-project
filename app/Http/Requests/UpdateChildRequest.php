@@ -29,8 +29,6 @@ class UpdateChildRequest extends FormRequest
             'name'=>'nullable|string|max:30',
             'client_id'=>'required|integer',
             'age'=> 'nullable|integer|max:13',
-            'nursery_id'=>'nullable|integer',
-            'gender' => 'nullable|integer',
             'mediafile' => 'nullable|file|mimes:jpg,bmp,png',
         ];
     }

@@ -118,7 +118,9 @@ class ClientController extends Controller
 
 
 
-                return response()->json(new ClientShowResource($client), Response::HTTP_CREATED);
+                return response()->json([
+                    'client' => new ClientShowResource($client),
+                ], Response::HTTP_CREATED);
 
         } catch(Exception $e) {
                 return response()->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);

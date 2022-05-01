@@ -28,13 +28,13 @@ class ReviewController extends Controller
 
             if($request->model_type = "course"){
                 $reviews  = Review::where([
-                    ['model_id', '=', $request->model_id],
-                    ['model_type', '=', 'App\CourseNursery']
+                    ['model_type', '=', 'App\CourseNursery'],
+                    ['model_id', '=', $request->model_id]
                     ])->get();
-            } elseif ($request->type = "nursery") {
+            } elseif ($request->model_type = "nursery") {
                 $reviews  = Review::where([
-                    ['model_id', '=', $request->model_id],
-                    ['model_type', '=', 'App\Nursery']
+                    ['model_type', '=', 'App\Nursery'],
+                    ['model_id', '=', $request->model_id]
                     ])->get();
             }
 
@@ -108,6 +108,8 @@ class ReviewController extends Controller
                 ], Response::HTTP_NOT_ACCEPTABLE);
             }
 
+
+
             $validator = Validator::make($request->all(),$request->rules());
             if ($validator->fails()) {
                 return response()->json([
@@ -142,7 +144,7 @@ class ReviewController extends Controller
     {
         try{
 
-            $review = Review::find($id);
+            $review = Review::findOrFail($id);
             if($review->client_id !=  $request->client_id){
                 return response()->json(['error' => 'You cannot delete this review'], Response::HTTP_NOT_ACCEPTABLE);
             }
