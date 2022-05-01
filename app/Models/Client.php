@@ -47,7 +47,7 @@ class Client extends Authenticatable // implements MustVerifyEmail
 
     const LOGIN_TYPE = [
         'EM' => "email",
-        'MO' => "mobile",
+        'PH' => "phone",
         'FB' => "facebook",
         'GO' => "google",
     ];
