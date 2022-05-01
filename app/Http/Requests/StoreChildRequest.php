@@ -3,10 +3,12 @@
 namespace App\Http\Requests;
 
 use App\Models\Child;
+use App\Traits\FormRequestPreventAutoValidation;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreChildRequest extends FormRequest
 {
+    use FormRequestPreventAutoValidation;
     /**
      * Determine if the user is authorized to make this request.
      *

@@ -4,9 +4,11 @@ namespace App\Http\Requests;
 
 use App\Models\Child;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\FormRequestPreventAutoValidation;
 
 class StoreReservationRequest extends FormRequest
 {
+    use FormRequestPreventAutoValidation;
     /**
      * Determine if the user is authorized to make this request.
      *

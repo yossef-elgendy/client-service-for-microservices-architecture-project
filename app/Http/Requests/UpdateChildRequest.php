@@ -3,9 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\FormRequestPreventAutoValidation;
 
 class UpdateChildRequest extends FormRequest
 {
+    use FormRequestPreventAutoValidation;
     /**
      * Determine if the user is authorized to make this request.
      *
