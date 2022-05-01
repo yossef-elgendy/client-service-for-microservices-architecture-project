@@ -111,11 +111,12 @@ class ReviewController extends Controller
     {
         try{
 
-            $review = Review::find($id);
+            $review = Review::findOrFail($id);
             if($review->client_id !=  $request->client_id){
                 return response()->json([
-                    'error' => 'You cannot update this review.'
-                ], Response::HTTP_NOT_ACCEPTABLE);
+                    'error' => 'You cannot update this review.',
+                    'status'=>Response::HTTP_NOT_ACCEPTABLE
+                ]);
             }
 
 
@@ -123,23 +124,25 @@ class ReviewController extends Controller
             $validator = Validator::make($request->all(),$request->rules());
             if ($validator->fails()) {
                 return response()->json([
-                    'error'=>$validator->getMessageBag()
-                ], Response::HTTP_BAD_REQUEST);
+                    'error'=>$validator->getMessageBag(),
+                    'status' => Response::HTTP_BAD_REQUEST
+                ]);
             }
 
             $fields = $validator->validated();
 
-            $review = $review->update([
-                'content' => $fields['content']?? $review->content,
-                'rate'=> $fields['rate']?? $review->rate,
-            ]);
+            $review = $review->update($fields);
 
             return response()->json([
-                'review' => new ReviewResource($review)
-            ], Response::HTTP_ACCEPTED);
+                'review' => new ReviewResource($review),
+                'status'=> Response::HTTP_ACCEPTED
+            ]);
 
         }catch(Exception $e){
-            return response()->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+            return response()->json([
+                'error' => $e->getMessage(),
+                'status'=>Response::HTTP_NOT_FOUND
+            ]);
         }
     }
 
@@ -156,16 +159,24 @@ class ReviewController extends Controller
 
             $review = Review::findOrFail($id);
             if($review->client_id !=  $request->client_id){
-                return response()->json(['error' => 'You cannot delete this review'], Response::HTTP_NOT_ACCEPTABLE);
+
+                return response()->json([
+                    'error' => 'You cannot delete this review',
+                    'status'=>Response::HTTP_NOT_ACCEPTABLE
+                ]);
             }
 
             $review->delete();
             return response()->json([
-                'message' => 'Review has been deleted successfully.'
-            ], Response::HTTP_ACCEPTED);
+                'message' => 'Review has been deleted successfully.',
+                'status' => Response::HTTP_ACCEPTED
+            ]);
 
         } catch(Exception $e) {
-            return response()->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+            return response()->json([
+                'error' => $e->getMessage(),
+                'status'=>Response::HTTP_NOT_FOUND
+            ]);
         }
     }
 }

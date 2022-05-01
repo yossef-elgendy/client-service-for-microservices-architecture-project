@@ -29,19 +29,22 @@ class ClientController extends Controller
 
             if($client){
                 return response()->json([
-                    'client'=> new ClientShowResource($client)
-               ],Response::HTTP_OK);
+                    'client'=> new ClientShowResource($client),
+                    'status'=>Response::HTTP_OK
+               ]);
             } else {
                 return response()->json([
-                    'client'=> null
-               ],Response::HTTP_OK);
+                    'client'=> null,
+                    'status'=>Response::HTTP_NOT_FOUND
+               ]);
             }
 
 
         } catch (Exception $e) {
             return response()->json([
-                'message'=> $e->getMessage()
-           ],Response::HTTP_UNAUTHORIZED);
+                'error' => $e->getMessage(),
+                'status'=>Response::HTTP_NOT_FOUND
+            ]);
         }
     }
 
@@ -57,8 +60,11 @@ class ClientController extends Controller
                 $validator = Validator::make($request->all(), $request->rules());
 
                 if ($validator->fails()) {
-                    return response()->json(['error'=> $validator->getMessageBag()]
-                    , Response::HTTP_BAD_REQUEST);
+
+                    return response()->json([
+                        'error' => $validator->getMessageBag(),
+                        'status'=>Response::HTTP_BAD_REQUEST
+                    ]);
                 }
 
                 $fields = $validator->validated();
@@ -76,13 +82,15 @@ class ClientController extends Controller
 
             $response = [
                 'client' => new ClientShowResource($client),
+                'status' => Response::HTTP_CREATED
             ];
 
-            return response()->json($response, Response::HTTP_CREATED);
+            return response()->json($response);
 
         } catch (Exception $e){
-            return response([
-                'Error !!' => $e->getMessage()
+            return response()->json([
+                'error' => $e->getMessage(),
+                'status'=>Response::HTTP_NOT_FOUND
             ]);
         }
     }
@@ -103,11 +111,14 @@ class ClientController extends Controller
                 $client = Client::find($id);
                 $validator = Validator::make($request->all(), $request->rules());
                 if($validator->fails()) {
-                    return response()->json(['error' => $validator->getMessageBag()],
-                    Response::HTTP_NOT_ACCEPTABLE);
+                    return response()->json([
+                        'error' => $validator->getMessageBag(),
+                        'status' =>Response::HTTP_NOT_ACCEPTABLE
+                    ]);
                 }
 
                 $data = $validator->validated();
+
 
                 if($request->gender && $client->gender != null){
                     $data =  Arr::except($data, ['gender']);
@@ -120,10 +131,14 @@ class ClientController extends Controller
 
                 return response()->json([
                     'client' => new ClientShowResource($client),
-                ], Response::HTTP_CREATED);
+                    'status' => Response::HTTP_CREATED
+                ]);
 
         } catch(Exception $e) {
-                return response()->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+            return response()->json([
+                'error' => $e->getMessage(),
+                'status'=>Response::HTTP_NOT_FOUND
+            ]);
         }
 
     }
@@ -143,24 +158,30 @@ class ClientController extends Controller
             $children_count = $client->loadCount('children');
 
             if($children_count) {
-                if($children_count > 1) return response()->json(
-                    ['error' => "Client has $children_count children. Cannot delete."],
-                    401
-                );
+                if($children_count > 1) return response()->json([
+                        'error' => "Client has $children_count children. Cannot delete.",
+                        'status' => 401
+                    ]);
 
-                if( $children_count = 1) return response()->json(
-                    ['error' => "Client has $children_count child. Cannot delete."],
-                    401
-                );
+                if( $children_count = 1) return response()->json([
+                        'error' => "Client has $children_count child. Cannot delete.",
+                        'status'=> 401
+                    ]);
 
             }
 
 
             $client->delete();
 
-			return response()->json(['message' => 'Client deleted'], Response::HTTP_OK);
+			return response()->json([
+                'message' => 'Client deleted',
+                'status' =>Response::HTTP_OK
+            ]);
 		} catch (Exception $e) {
-			return response()->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+			return response()->json([
+                'error' => $e->getMessage(),
+                'status'=>Response::HTTP_NOT_FOUND
+            ]);
 		}
     }
 

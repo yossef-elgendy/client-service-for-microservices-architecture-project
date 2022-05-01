@@ -27,9 +27,9 @@ class UpdateClientRequest extends FormRequest
     public function rules()
     {
         return [
-            "username" => 'nullable|unique:clients,username,'.$this->route('id').',id',
-            "fullname" => 'nullable',
-            "gender"=>'nullable|in:'.implode(',', array_keys(Client::GENDER)),
+            "username" => 'string|unique:clients,username,'.$this->route('id').',id',
+            "fullname" => 'string',
+            "gender"=>'in:'.implode(',', array_keys(Client::GENDER)),
         ];
     }
 }

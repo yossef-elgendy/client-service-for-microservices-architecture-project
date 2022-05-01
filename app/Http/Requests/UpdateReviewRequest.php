@@ -26,8 +26,8 @@ class UpdateReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            'content'=>'nullable|string|max:400',
-            'rate'=>'nullable|integer|between:1,5',
+            'content'=>'string|max:400',
+            'rate'=>'integer|between:1,5',
             'client_id'=>'required|integer'
         ];
     }
