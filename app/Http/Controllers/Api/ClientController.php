@@ -16,37 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-
-        try{
-            $client = Client::find($request->client_id);
-
-            if($client){
-                return response()->json([
-                    'client'=> new ClientShowResource($client),
-                    'status'=>Response::HTTP_OK
-               ]);
-            } else {
-                return response()->json([
-                    'client'=> null,
-                    'status'=>Response::HTTP_NOT_FOUND
-               ]);
-            }
-
-
-        } catch (Exception $e) {
-            return response()->json([
-                'error' => $e->getMessage(),
-                'status'=>Response::HTTP_NOT_FOUND
-            ]);
-        }
-    }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -88,6 +58,33 @@ class ClientController extends Controller
             return response()->json($response);
 
         } catch (Exception $e){
+            return response()->json([
+                'error' => $e->getMessage(),
+                'status'=>Response::HTTP_NOT_FOUND
+            ]);
+        }
+    }
+
+    public function show($id)
+    {
+
+        try{
+            $client = Client::findOrFail($id);
+
+            if($client){
+                return response()->json([
+                    'client'=> new ClientShowResource($client),
+                    'status'=>Response::HTTP_OK
+               ]);
+            } else {
+                return response()->json([
+                    'client'=> null,
+                    'status'=>Response::HTTP_NOT_FOUND
+               ]);
+            }
+
+
+        } catch (Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
                 'status'=>Response::HTTP_NOT_FOUND
