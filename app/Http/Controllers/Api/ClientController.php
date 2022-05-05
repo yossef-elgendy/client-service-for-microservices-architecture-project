@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ClientController extends Controller
 {
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -39,12 +39,13 @@ class ClientController extends Controller
 
                 $fields = $validator->validated();
                 $fields['location'] = [
-                    'country' => $request->country,
+                    'governerate' => $request->governerate,
                     'city' => $request->city,
                     'area' => $request->area,
                 ];
 
-                $client = Client::create(Arr::except($fields,['country','city','area','image']));
+                $client = Client::create(
+                    Arr::except($fields,['governerate','city','area','image']));
 
 
 
@@ -65,11 +66,11 @@ class ClientController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Request $request)
     {
 
         try{
-            $client = Client::findOrFail($id);
+            $client = Client::findOrFail($request->client_id);
 
             if($client){
                 return response()->json([
@@ -119,6 +120,23 @@ class ClientController extends Controller
 
                 if($request->gender && $client->gender != null){
                     $data =  Arr::except($data, ['gender']);
+                }
+
+                if($request->governerate || $request->city|| $request->area){
+                    $data['location'] = [
+                        'governerate' => $request->governerate?? $client->location->governerate,
+                        'city'=> $request->city?? $client->location->city,
+                        'area'=> $request->area?? $client->location->area,
+                    ];
+                    $data = Arr::except($data, ['governerate' , 'city', 'area']);
+                }
+
+                if($client->login_type == 'EM'){
+                    $data = Arr::except($data, ['email']);
+                }
+
+                if($client->login_type == 'PH'){
+                    $data = Arr::except($data, ['phone']);
                 }
 
                 $client->update($data);

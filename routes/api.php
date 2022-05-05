@@ -34,7 +34,8 @@ Route::apiResource("mediafiles", MediafileController::class)
 Route::apiResource("reviews", ReviewController::class)
 ->except(['show']);
 
-Route::apiResource('clients', ClientController::class)->except(['index']);
+Route::apiResource('clients', ClientController::class)->except(['index', 'show']);
+Route::get('/clients/profile', [ClientController::class, 'show']);
 
 Route::get('/notifications', function(Request $request) {
     return response()->json($request->user()->notifications);

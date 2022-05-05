@@ -30,6 +30,11 @@ class UpdateClientRequest extends FormRequest
             "username" => 'string|unique:clients,username,'.$this->route('id').',id',
             "fullname" => 'string',
             "gender"=>'in:'.implode(',', array_keys(Client::GENDER)),
+            "email"=>"email|unique:clients,email".$this->route('id').',id',
+            "phone"=>"unique:clients,phone".$this->route('id').',id',
+            "governerate"=> "max:30",
+            "city"=> "max:30",
+            "area"=> "max:30",
         ];
     }
 }

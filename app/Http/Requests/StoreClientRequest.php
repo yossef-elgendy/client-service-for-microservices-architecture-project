@@ -28,12 +28,12 @@ class StoreClientRequest extends FormRequest
     {
         return [
             "id"=>'required|unique:clients,id',
-            "fullname" => "required|string",
+            "fullname" => "string|max:40",
             "login_type"=> "required|in:".implode(',', array_keys(Client::LOGIN_TYPE)),
             "email"=>"required_if:login_type,EM|email|unique:clients,email",
             "phone"=>"required_if:login_type,MO|unique:clients,phone",
             "gender"=>"in:".implode(',', array_keys(Client::GENDER)),
-            "country"=> "max:30",
+            "governerate"=> "max:30",
             "city"=> "max:30",
             "area"=> "max:30",
             "payment_info"=>"json",
