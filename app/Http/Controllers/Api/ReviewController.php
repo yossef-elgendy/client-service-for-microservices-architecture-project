@@ -96,14 +96,14 @@ class ReviewController extends Controller
 
             if($request->model_type == "nursery"){
                 NurseryRating::dispatch([
-                    'nursery_id' => $fields['model_id'],
-                    'rate'=> $fields['rate']
-                ]);
+                    'nursery_id' => $review->model_id,
+                    'rate'=> $review->rate
+                ])->onConnection('rabbitmq')->onQueue('provider');
 
             } elseif($request->model_type == "course") {
                 CourseNurseryRating::dispatch([
-                    'course_nursery_id'=> $fields['model_id'],
-                    'rate'=> $fields['rate']
+                    'course_nursery_id'=> $review->model_id,
+                    'rate'=> $review->rate
                 ])->onConnection('rabbitmq')->onQueue('provider');
             }
             return response()->json([

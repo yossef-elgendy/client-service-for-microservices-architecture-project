@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreChildRequest;
 use App\Http\Requests\UpdateChildRequest;
 use App\Http\Resources\Child\ChildIndexResource;
+use App\Jobs\ClientDispatched\ClientChildUpdated;
 use App\Models\Child;
 use App\Models\Media;
 use Exception;
@@ -186,6 +187,12 @@ class ChildController extends Controller
             $fields = $validator->validated();
 
             $child->update(Arr::except($fields, ['mediafile']));
+
+            ClientChildUpdated::dispatch([
+                'child_id' => $id,
+                'name' => $child->name,
+                'age'=> $child->age,
+            ])->onConnection('rabbitmq')->onQueue('provider');
 
             if($request->mediafile){
 
