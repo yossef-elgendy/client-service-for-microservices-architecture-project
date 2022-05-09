@@ -2,6 +2,7 @@
 
 namespace App\Jobs\ProviderDispatched;
 
+use App\Models\Child;
 use App\Models\Client;
 use App\Models\Order;
 use App\Models\Reservation;
@@ -42,10 +43,15 @@ class ProviderReservationAccept implements ShouldQueue
         // Need {reservation_id, reply, client_id, courses:[{id,cost}, {id,cost}], subscription_fee}
 
         try {
-            $reservation = Reservation::find($this->data['reservation_id']);
+            $reservation = Reservation::findOrFail($this->data['reservation_id']);
             $reservation = $reservation->update([
                 'status' => 2,
                 'reply' => $this->data['reply']
+            ]);
+
+            $child = Child::findOrFail($reservation->child_id);
+            $child->update([
+                'nursery_id'=> $reservation->nursery_id
             ]);
 
             $totalCost = $this->data['subscription_fee'] ?? 0;
@@ -63,7 +69,7 @@ class ProviderReservationAccept implements ShouldQueue
             ]);
 
             $client = Client::find($this->data['client_id']);
-            
+
             $client->notify(new ReservationInformation([
                 'reservation' => $reservation,
                 'order' => $order

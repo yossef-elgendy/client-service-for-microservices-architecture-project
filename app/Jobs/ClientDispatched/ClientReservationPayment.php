@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs\ProviderDispatched;
+namespace App\Jobs\ClientDispatched;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ProviderChildUpdate implements ShouldQueue
+class ClientReservationPayment implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 

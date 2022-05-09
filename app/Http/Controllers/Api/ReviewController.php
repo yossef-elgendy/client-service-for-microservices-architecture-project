@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReviewRequest;
 use App\Http\Requests\UpdateReviewRequest;
 use App\Http\Resources\Review\ReviewResource;
+use App\Jobs\ClientDispatched\CourseNurseryRating;
+use App\Jobs\ClientDispatched\NurseryRating;
 use App\Models\Review;
 use Exception;
 use Illuminate\Support\Facades\Validator;
@@ -33,8 +35,9 @@ class ReviewController extends Controller
                     ])->get();
 
                     return response()->json([
-                        'reviews' => ReviewResource::collection($reviews)
-                    ], Response::HTTP_ACCEPTED);
+                        'reviews' => ReviewResource::collection($reviews),
+                        'status' =>Response::HTTP_ACCEPTED
+                    ]);
             }
 
             if ($request->model_type == "nursery") {
@@ -45,12 +48,14 @@ class ReviewController extends Controller
 
                     return response()->json([
                         'reviews' => ReviewResource::collection($reviews),
-                    ], Response::HTTP_ACCEPTED);
+                        'status' =>Response::HTTP_ACCEPTED
+                    ]);
             }
 
             return response()->json([
-                'reviews' => []
-            ], Response::HTTP_ACCEPTED);
+                'reviews' => [],
+                'status' => Response::HTTP_ACCEPTED
+            ]);
 
 
         } catch (Exception $e) {
@@ -73,8 +78,10 @@ class ReviewController extends Controller
             $validator = Validator::make($request->all(),$request->rules());
 
             if ($validator->fails()) {
-                return response()->json(['error'=>$validator->getMessageBag()],
-                    Response::HTTP_BAD_REQUEST);
+                return response()->json([
+                    'error'=>$validator->getMessageBag(),
+                    'status'=> Response::HTTP_BAD_REQUEST
+                ]);
             }
 
             $fields = $validator->validated();
@@ -87,12 +94,28 @@ class ReviewController extends Controller
 
             $review = Review::create($fields);
 
+            if($request->model_type == "nursery"){
+                NurseryRating::dispatch([
+                    'nursery_id' => $fields['model_id'],
+                    'rate'=> $fields['rate']
+                ]);
+
+            } elseif($request->model_type == "course") {
+                CourseNurseryRating::dispatch([
+                    'course_nursery_id'=> $fields['model_id'],
+                    'rate'=> $fields['rate']
+                ])->onConnection('rabbitmq')->onQueue('provider');
+            }
             return response()->json([
-                'review' => new ReviewResource($review)
-            ], Response::HTTP_CREATED);
+                'review' => new ReviewResource($review),
+                'status' => Response::HTTP_CREATED
+            ]);
 
         }catch( Exception $e) {
-            return response()->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+            return response()->json([
+                'error' => $e->getMessage(),
+                'status'=> Response::HTTP_NOT_FOUND
+            ]);
         }
 
 
