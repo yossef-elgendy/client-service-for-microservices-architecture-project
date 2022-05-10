@@ -98,13 +98,13 @@ class ReviewController extends Controller
                 NurseryRating::dispatch([
                     'nursery_id' => $review->model_id,
                     'rate'=> $review->rate
-                ])->onConnection('rabbitmq')->onQueue('provider');
+                ])->onConnection('rabbitmq')->onQueue(config('queue.rabbitmq_queue.provider_service'));
 
             } elseif($request->model_type == "course") {
                 CourseNurseryRating::dispatch([
                     'course_nursery_id'=> $review->model_id,
                     'rate'=> $review->rate
-                ])->onConnection('rabbitmq')->onQueue('provider');
+                ])->onConnection('rabbitmq')->onQueue(config('queue.rabbitmq_queue.provider_service'));
             }
             return response()->json([
                 'review' => new ReviewResource($review),

@@ -44,6 +44,6 @@ class ApplicationBootCommand extends Command
             'port' => env('SERVICE_PORT', '8002'),
             'base_uri' => env('APP_URL', 'http://localhost:8002'),
             'secret_token' => env('SECRET_TOKEN', ''),
-          ])->onConnection('rabbitmq')->onQueue('api_gateway');
+          ])->onConnection('rabbitmq')->onQueue(config('queue.rabbitmq_queue.api_gateway_service'));
     }
 }

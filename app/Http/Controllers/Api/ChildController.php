@@ -192,7 +192,7 @@ class ChildController extends Controller
                 'child_id' => $id,
                 'name' => $child->name,
                 'age'=> $child->age,
-            ])->onConnection('rabbitmq')->onQueue('provider');
+            ])->onConnection('rabbitmq')->onQueue(config('queue.rabbitmq_queue.provider_service'));
 
             if($request->mediafile){
 
