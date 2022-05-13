@@ -28,7 +28,7 @@ class UpdateReviewRequest extends FormRequest
         return [
             'content'=>'string|max:400',
             'rate'=>'integer|between:1,5',
-            'client_id'=>'required|integer'
+            'client_id'=>'required|exists:clients,id'
         ];
     }
 }

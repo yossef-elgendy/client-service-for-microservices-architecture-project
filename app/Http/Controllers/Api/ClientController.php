@@ -32,7 +32,7 @@ class ClientController extends Controller
                 if ($validator->fails()) {
 
                     return response()->json([
-                        'error' => $validator->getMessageBag(),
+                        'errors' => $validator->getMessageBag(),
                         'status'=>Response::HTTP_BAD_REQUEST
                     ]);
                 }
@@ -60,7 +60,7 @@ class ClientController extends Controller
 
         } catch (Exception $e){
             return response()->json([
-                'error' => $e->getMessage(),
+                'errors' => [$e->getMessage()],
                 'status'=>Response::HTTP_NOT_FOUND
             ]);
         }
@@ -87,7 +87,7 @@ class ClientController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'error' => $e->getMessage(),
+                'errors' =>[$e->getMessage()],
                 'status'=>Response::HTTP_NOT_FOUND
             ]);
         }
@@ -110,7 +110,7 @@ class ClientController extends Controller
                 $validator = Validator::make($request->all(), $request->rules());
                 if($validator->fails()) {
                     return response()->json([
-                        'error' => $validator->getMessageBag(),
+                        'errors' => $validator->getMessageBag(),
                         'status' =>Response::HTTP_NOT_ACCEPTABLE
                     ]);
                 }
@@ -151,7 +151,7 @@ class ClientController extends Controller
 
         } catch(Exception $e) {
             return response()->json([
-                'error' => $e->getMessage(),
+                'errors' =>[$e->getMessage()],
                 'status'=>Response::HTTP_NOT_FOUND
             ]);
         }
@@ -174,12 +174,12 @@ class ClientController extends Controller
 
             if($children_count) {
                 if($children_count > 1) return response()->json([
-                        'error' => "Client has $children_count children. Cannot delete.",
+                        'errors' => ["Client has $children_count children. Cannot delete."],
                         'status' => 401
                     ]);
 
                 if( $children_count = 1) return response()->json([
-                        'error' => "Client has $children_count child. Cannot delete.",
+                        'errors' => ["Client has $children_count child. Cannot delete."],
                         'status'=> 401
                     ]);
 
@@ -194,7 +194,7 @@ class ClientController extends Controller
             ]);
 		} catch (Exception $e) {
 			return response()->json([
-                'error' => $e->getMessage(),
+                'errors' =>[$e->getMessage()],
                 'status'=>Response::HTTP_NOT_FOUND
             ]);
 		}

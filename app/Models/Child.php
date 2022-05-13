@@ -61,4 +61,10 @@ class Child extends Model
         return $this->belongsTo(Client::class);
     }
 
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class);
+    }
+
 }

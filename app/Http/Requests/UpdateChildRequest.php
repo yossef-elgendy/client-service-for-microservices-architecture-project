@@ -27,7 +27,7 @@ class UpdateChildRequest extends FormRequest
     {
         return [
             'name'=>'nullable|string|max:30',
-            'client_id'=>'required|integer',
+            'client_id'=>'required|exists:clients,id',
             'age'=> 'nullable|integer|max:13',
             'mediafile' => 'nullable|file|mimes:jpg,bmp,png',
         ];

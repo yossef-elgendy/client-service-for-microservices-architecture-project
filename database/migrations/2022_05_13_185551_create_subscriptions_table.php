@@ -14,17 +14,30 @@ class CreateSubscriptionsTable extends Migration
     public function up()
     {
         Schema::create('subscriptions', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('id')->primary();
             $table->unsignedBigInteger('child_id');
             $table->unsignedBigInteger('nursery_id');
-            $table->float('amount', 8, 2, true);
-            $table->json('activities_id');
-            $table->json('courses_id');
+            $table->unsignedBigInteger('reservation_id');
             $table->dateTime('start_date');
             $table->dateTime('due_date');
-            $table->dateTime('payment_date');
-            $table->integer('status');
+            $table->dateTime('payment_date')->nullable();
+            $table->tinyInteger('payment_method')->nullable();
+            $table->tinyInteger('status')->default('0');
             $table->timestamps();
+            $table->softDeletes();
+
+            // Relations
+            $table->foreign('child_id')
+              ->references('id')
+              ->on('children')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
+            $table->foreign('reservation_id')
+              ->references('id')
+              ->on('reservations')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
+
         });
     }
 

@@ -31,7 +31,8 @@ class StoreReservationRequest extends FormRequest
             'child_id'=>'required|integer',
             'courses' => 'nullable|array',
             'activities' => 'nullable|array',
-            'client_id'=>'required|integer'
+            'type'=> 'required|in:0,1',
+            'client_id'=>'required|exists:clients,id',
         ];
     }
 }

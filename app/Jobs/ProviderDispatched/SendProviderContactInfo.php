@@ -2,6 +2,9 @@
 
 namespace App\Jobs\ProviderDispatched;
 
+use App\Models\Client;
+use App\Models\Reservation;
+use App\Notifications\Recieved\ProviderInfoNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -31,6 +34,19 @@ class SendProviderContactInfo implements ShouldQueue
      */
     public function handle()
     {
-        //
+        try{
+
+            $reservation = Reservation::find($this->data['reservation_id']);
+            $client = Client::find($reservation->client_id);
+
+            $client->notify(new ProviderInfoNotification([
+                'name'=> $this->data['name'],
+                'location'=> $this->data['location'],
+                'phone'=> $this->data['phone']
+            ]));
+            
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

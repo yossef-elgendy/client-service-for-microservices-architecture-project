@@ -3,11 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Traits\FormRequestPreventAutoValidation;
 
-class StoreReviewRequest extends FormRequest
+class UpdateSubscriptionRequest extends FormRequest
 {
-    use FormRequestPreventAutoValidation;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,11 +24,10 @@ class StoreReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            'model_id' => 'required|integer',
-            'model_type'=>'required|string|in:nursery,course',
-            'client_id'=> 'required|exists:clients,id',
-            'content'=>'required|string|max:400',
-            'rate'=>'required|integer|between:1,5'
+            'client_id' => 'required|exists:clients,id',
+            'start_date' => 'nullable|date',
+            'due_date' => 'nullable|date',
+            'payment_date' => 'nullable|date',
         ];
     }
 }

@@ -38,7 +38,7 @@ class ChildController extends Controller
         } catch(Exception $e) {
 
             return response()->json([
-                'error' => $e->getMessage(),
+                'errors' =>[ $e->getMessage()],
                 'status'=>Response::HTTP_NOT_FOUND
             ]);
 
@@ -58,7 +58,7 @@ class ChildController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'error'=>$validator->getMessageBag(),
+                    'errors'=>$validator->getMessageBag(),
                     'status'=>Response::HTTP_BAD_REQUEST
                 ]);
             }
@@ -91,7 +91,7 @@ class ChildController extends Controller
                 return response()->json(
                 [
                     'message' => 'Mediafile not uploaded! Default file is used instead',
-                    'error' => $mediafile_store_response,
+                    'errors' => [$mediafile_store_response],
                     'data' => new ChildIndexResource($child),
                     'status'=>Response::HTTP_CREATED
                 ]);
@@ -105,7 +105,7 @@ class ChildController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'error' => $e->getMessage(),
+                'errors' => [$e->getMessage()],
                 'status'=>Response::HTTP_NOT_FOUND
             ]);
 
@@ -126,14 +126,14 @@ class ChildController extends Controller
 
             if(!$child = Child::find($id)){
                 return response()->json([
-                    'error' => 'Child not found.',
+                    'errors' => ['Child not found.'],
                     'status'=> Response::HTTP_NOT_FOUND
                 ]);
             }
 
             if($request->client_id != $child->client_id){
                 return response()->json([
-                    'error' => 'You can not show this child.',
+                    'errors' => ['You can not show this child.'],
                     'status'=> 403
                 ]);
             }
@@ -144,7 +144,7 @@ class ChildController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'error' => $e->getMessage(),
+                'errors' => [$e->getMessage()],
                 'status'=>Response::HTTP_NOT_FOUND
             ]);
         }
@@ -163,14 +163,14 @@ class ChildController extends Controller
 
             if(!$child = Child::find($id)){
                 return response()->json([
-                    'error' => 'Child not found.',
+                    'errors' => ['Child not found.'],
                     'status'=> Response::HTTP_NOT_FOUND
                 ]);
             }
 
             if($request->client_id != $child->client_id){
                 return response()->json([
-                    'error' => 'You can not update this child.',
+                    'errors' => ['You can not update this child.'],
                     'status'=> 401
             ]);
             }
@@ -179,7 +179,7 @@ class ChildController extends Controller
 
             if($validator->fails()){
                 return response()->json([
-                    'error'=>$validator->getMessageBag(),
+                    'errors'=>$validator->getMessageBag(),
                     'status'=>Response::HTTP_BAD_REQUEST
                 ]);
             }
@@ -192,7 +192,9 @@ class ChildController extends Controller
                 'child_id' => $id,
                 'name' => $child->name,
                 'age'=> $child->age,
-            ])->onConnection('rabbitmq')->onQueue(config('queue.rabbitmq_queue.provider_service'));
+            ])
+            ->onConnection('rabbitmq')
+            ->onQueue(config('queue.rabbitmq_queue.provider_service'));
 
             if($request->mediafile){
 
@@ -216,7 +218,7 @@ class ChildController extends Controller
                     return response()->json(
                     [
                         'message' => 'Mediafile not uploaded! Default file is used instead',
-                        'error' => $mediafile_update_response,
+                        'errors' => [$mediafile_update_response],
                         'data' => new ChildIndexResource($child),
                         'status'=> Response::HTTP_CREATED
                     ]);
@@ -231,7 +233,7 @@ class ChildController extends Controller
         } catch (Exception $e) {
 
             return response()->json([
-                'error' => $e->getMessage(),
+                'errors' => [$e->getMessage()],
                 'status' =>Response::HTTP_NOT_FOUND
             ]);
 
@@ -250,14 +252,14 @@ class ChildController extends Controller
 
             if(!$child = Child::find($id)){
                 return response()->json([
-                    'error' => 'Child not found.',
+                    'errors' => ['Child not found.'],
                     'status'=> Response::HTTP_NOT_FOUND
                 ]);
             }
 
             if($request->client_id != $child->client_id){
                 return response()->json([
-                    'error' => 'You can not delete this child.',
+                    'errors' =>['You can not delete this child.'],
                     'status'=>401
             ]);
             }
@@ -272,7 +274,7 @@ class ChildController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'error' => $e->getMessage(),
+                'errors' => [$e->getMessage()],
                 'status'=>Response::HTTP_NOT_FOUND
             ]);
         }

@@ -28,7 +28,7 @@ class UpdateReservationRequest extends FormRequest
     {
         return  [
             'client_end' => 'required_if:status,0,2|in:'.implode(',', array_keys(Reservation::CLIENT_END)),
-            'client_id'=> 'required|integer'
+            'client_id'=> 'required|exists:clients,id'
           ];
     }
 }

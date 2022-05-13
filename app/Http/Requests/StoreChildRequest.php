@@ -29,7 +29,7 @@ class StoreChildRequest extends FormRequest
         return [
             'name'=>'required|string|max:30',
             'age'=> 'required|integer|max:13',
-            'client_id'=>'required|integer',
+            'client_id'=>'required|exists:clients,id',
             'nursery_id'=>'nullable|integer',
             'time_table'=> 'nullable|array|min:3',
             'time_table.*'=>'nullable|date',

@@ -41,8 +41,8 @@ class ReservationController extends Controller
             ]);
         } catch (Exception $e){
             return response()->json([
-                'Error !!' => $e->getMessage(),
-                'Line'=> $e->getLine(),
+                'errors' => [$e->getMessage()],
+                'line'=> $e->getLine(),
                 'status' =>Response::HTTP_NOT_FOUND
             ]);
         }
@@ -63,7 +63,7 @@ class ReservationController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'error'=>$validator->getMessageBag(),
+                    'errors'=>$validator->getMessageBag(),
                     'status'=> 400
                 ]);
             }
@@ -71,7 +71,7 @@ class ReservationController extends Controller
 
             if($request->client_id != Child::find($request->child_id)->client_id){
                 return response()->json([
-                    'error'=>'Error the child don\'t exist.',
+                    'errors'=>['Error the child don\'t exist.'],
                     'status'=> 400
                 ]);
             }
@@ -98,7 +98,7 @@ class ReservationController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'error' => $e->getMessage(),
+                'errors' => [$e->getMessage()],
                 'line'=> $e->getLine(),
                 'status' => 404
             ]);
@@ -120,7 +120,7 @@ class ReservationController extends Controller
             $reservation = Reservation::find($id);
 			if(! $reservation || $reservation->client_id != $request->client_id ) {
 				return response()->json([
-                    'error' => 'You can not show this reservation.',
+                    'errors' =>[ 'You can not show this reservation.'],
                     'status' => Response::HTTP_UNAUTHORIZED
                 ]);
 			}
@@ -131,7 +131,7 @@ class ReservationController extends Controller
             ]);
 		} catch (\Exception $e) {
 			return response()->json([
-                'error' => $e->getMessage(),
+                'errors' => [$e->getMessage()],
                 'status'=> Response::HTTP_NOT_FOUND
             ]);
 		}
@@ -148,17 +148,18 @@ class ReservationController extends Controller
     public function update(UpdateReservationRequest $request, $id)
     {
         try {
+
             $reservation = Reservation::find($id);
 			if(! $reservation || $reservation->client_id != $request->client_id ) {
 				return response()->json([
-                    'error' => 'You can not update this reservation.',
+                    'errors' => ['You can not update this reservation.'],
                     'status'=> Response::HTTP_UNAUTHORIZED
                 ]);
 			}
 
             if($reservation->provider_end) {
 				return response()->json([
-                    'error' => 'Nursery canceled this reservation.',
+                    'errors' => ['Nursery canceled this reservation.'],
                     'status' => 401
                 ]);
 			}
@@ -167,7 +168,7 @@ class ReservationController extends Controller
 
 			if($validator->fails()) {
 				return response()->json([
-                    'error' => $validator->getMessageBag(),
+                    'errors' => $validator->getMessageBag(),
                     'status' =>Response::HTTP_NOT_ACCEPTABLE
                 ]);
 			}
@@ -177,7 +178,7 @@ class ReservationController extends Controller
             if($reservation->status == 1){
                 $reservation->delete();
                 return response()->json([
-                    'error' => 'Nursery canceled this reservation already.',
+                    'errors' => ['Nursery canceled this reservation already.'],
                     'status'=> Response::HTTP_ALREADY_REPORTED
                 ]);
             } else {
@@ -209,7 +210,7 @@ class ReservationController extends Controller
 
 		} catch (Exception $e) {
 			return response()->json([
-                'error' => $e->getMessage(),
+                'errors' => [$e->getMessage()],
                 'status' => Response::HTTP_NOT_FOUND
             ]);
 		}
