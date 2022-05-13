@@ -85,7 +85,7 @@ class ReservationController extends Controller
 
 
             ReservationCreated::dispatch(new ReservationCreatedJobResource($reservation))
-            ->onQueue('provider')
+            ->onQueue(config('queue.rabbitmq_queue.provider_service'))
             ->onConnection('rabbitmq');
 
             return response()->json([
@@ -186,7 +186,7 @@ class ReservationController extends Controller
                     $reservation->update(['client_end'=> $data['client_end']]);
 
                     ClientReservationReject::dispatch($reservation->id)
-                    ->onQueue('provider')
+                    ->onQueue(config('queue.rabbitmq_queue.provider_service'))
                     ->onConnection('rabbitmq');
 
                     $reservation->delete();

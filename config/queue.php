@@ -14,6 +14,11 @@ return [
     */
 
     'default' => env('QUEUE_CONNECTION', 'rabbitmq'),
+    'rabbitmq_queue' => [
+    'api_gateway_service' => env('RABBITMQ_QUEUE_API_GATEWAY_SERVICE', 'api_gateway'),
+    'client_service' => env('RABBITMQ_QUEUE_CLIENT_SERVICE', 'client'),
+    'provider_service' => env('RABBITMQ_QUEUE_PROVIDER_SERVICE', 'provider'),
+  ],
 
     /*
     |--------------------------------------------------------------------------
