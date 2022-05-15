@@ -31,10 +31,10 @@ class Reservation extends Model
 
 
     const RESERVATION_TYPE = [
-    0 => 'monthly',
-    1 => 'daily'
+        0 => 'monthly',
+        1 => 'daily'
     ];
-    
+
     protected $casts = [
         'activities' => 'array',
         'courses' => 'array',

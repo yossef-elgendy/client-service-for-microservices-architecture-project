@@ -82,9 +82,23 @@ class ReservationController extends Controller
 
 
             $reservation = Reservation::create($fields);
+            $child = Child::findOrFail($reservation->child_id);
 
+            ReservationCreated::dispatch([
+                'reservation_id' => $reservation->id,
+                'client_id'=> $reservation->client_id,
+                'nursery_id'=> $reservation->nursery_id,
+                'reservation_type' => $reservation->type,
 
-            ReservationCreated::dispatch(new ReservationCreatedJobResource($reservation))
+                'status' => $reservation->status,
+                'client_end'=> $reservation->client_end,
+
+                'child_id'=> $child->id,
+                'name'=> $child->name,
+                'age'=> $child->age,
+                'rate'=> $child->rate,
+                'gender'=> $child->gender,
+            ])
             ->onQueue(config('queue.rabbitmq_queue.provider_service'))
             ->onConnection('rabbitmq');
 
