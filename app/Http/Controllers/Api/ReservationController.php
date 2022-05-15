@@ -90,9 +90,11 @@ class ReservationController extends Controller
                 'nursery_id'=> $reservation->nursery_id,
                 'reservation_type' => $reservation->type,
                 'reservation_start_date'=>$reservation->reservation_start_date,
+                'reservation_courses'=>$reservation->courses,
+                'reservation_activities'=>$reservation->activities,
 
                 'status' => $reservation->status,
-                'client_end'=> $reservation->client_end,
+                'reservation_client_end'=> $reservation->client_end,
 
                 'child_id'=> $child->id,
                 'name'=> $child->name,
