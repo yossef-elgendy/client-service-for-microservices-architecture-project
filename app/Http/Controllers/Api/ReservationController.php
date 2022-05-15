@@ -36,7 +36,7 @@ class ReservationController extends Controller
                 )->get();
 
             return response()->json([
-                'reservations' => $reservations,
+                'reservations' => ReservationIndexResource::collection($reservations),
                 'status' =>Response::HTTP_ACCEPTED
             ]);
         } catch (Exception $e){
@@ -99,7 +99,7 @@ class ReservationController extends Controller
                 'child_id'=> $child->id,
                 'child_name'=> $child->name,
                 'child_age'=> $child->age,
-    
+
                 'child_gender'=> $child->gender,
             ])
             ->onQueue(config('queue.rabbitmq_queue.provider_service'))

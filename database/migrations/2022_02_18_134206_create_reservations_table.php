@@ -17,7 +17,7 @@ class CreateReservationsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('nursery_id');
             $table->unsignedBigInteger('client_id');
-            $table->unsignedBigInteger('child_id');
+            $table->unsignedBigInteger('child_id')->unique();
             $table->tinyInteger('status')->nullable();
             $table->tinyInteger('provider_end')->default(0);
             $table->tinyInteger('client_end')->default(0);
