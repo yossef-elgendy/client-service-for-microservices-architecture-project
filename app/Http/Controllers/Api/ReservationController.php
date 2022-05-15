@@ -97,10 +97,10 @@ class ReservationController extends Controller
                 'reservation_client_end'=> $reservation->client_end,
 
                 'child_id'=> $child->id,
-                'name'=> $child->name,
-                'age'=> $child->age,
-                'rate'=> $child->rate,
-                'gender'=> $child->gender,
+                'child_name'=> $child->name,
+                'child_age'=> $child->age,
+    
+                'child_gender'=> $child->gender,
             ])
             ->onQueue(config('queue.rabbitmq_queue.provider_service'))
             ->onConnection('rabbitmq');
