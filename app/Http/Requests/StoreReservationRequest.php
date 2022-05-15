@@ -29,6 +29,7 @@ class StoreReservationRequest extends FormRequest
         return[
             'nursery_id'=>'required|integer',
             'child_id'=>'required|integer',
+            'reservation_start_date'=>'required|date',
             'courses' => 'nullable|array',
             'activities' => 'nullable|array',
             'type'=> 'required|in:0,1',

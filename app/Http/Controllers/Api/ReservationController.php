@@ -89,6 +89,7 @@ class ReservationController extends Controller
                 'client_id'=> $reservation->client_id,
                 'nursery_id'=> $reservation->nursery_id,
                 'reservation_type' => $reservation->type,
+                'reservation_start_date'=>$reservation->reservation_start_date,
 
                 'status' => $reservation->status,
                 'client_end'=> $reservation->client_end,

@@ -27,6 +27,7 @@ class Reservation extends Model
         'activities',
         'courses',
         'status',
+        'reservation_start_date',
     ];
 
 
