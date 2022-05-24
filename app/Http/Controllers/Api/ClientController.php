@@ -124,9 +124,9 @@ class ClientController extends Controller
 
                 if($request->governerate || $request->city|| $request->area){
                     $data['location'] = [
-                        'governerate' => $request->governerate?? $client->location->governerate,
-                        'city'=> $request->city?? $client->location->city,
-                        'area'=> $request->area?? $client->location->area,
+                        'governerate' => $request->governerate?? $client->location['governerate'],
+                        'city'=> $request->city?? $client->location['city'],
+                        'area'=> $request->area?? $client->location['area'],
                     ];
                     $data = Arr::except($data, ['governerate' , 'city', 'area']);
                 }
