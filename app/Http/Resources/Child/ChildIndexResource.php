@@ -40,10 +40,10 @@ class ChildIndexResource extends JsonResource
             'name' => $this->name,
             'age' => $this->age,
             'parent_name'=> $client->fullname,
+            'client_id'=> $this->client_id,
             "status" => Child::STATUS[$this->status] ?? Child::STATUS[0],
             "gender" => Child::GENDER[$this->gender] ?? Child::GENDER[0],
-            'time_table'=>$this->time_table,
-            'issues' => $this->issues,
+            'timetable_id'=>$this->timetable_id,
             'marks' => $this->marks,
             'rate' => $this->rate,
             'profile_image' => $this->mediafileDownload($profile_image)

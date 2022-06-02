@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
+use App\Http\Resources\Client\ClientIndexResource;
 use App\Http\Resources\Client\ClientShowResource;
 use App\Models\Client;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +18,20 @@ use Symfony\Component\HttpFoundation\Response;
 class ClientController extends Controller
 {
 
-
+    public function index(){
+        try{
+            $clients = Client::all();
+            return response()->json([
+                'clients' => ClientIndexResource::collection($clients),
+                'status' => Response::HTTP_OK
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'errors' => [$e->getMessage()],
+                'status'=>Response::HTTP_NOT_FOUND
+            ]);
+        }
+    }
     /**
      * Store a newly created resource in storage.
      *

@@ -27,8 +27,14 @@ class ChildController extends Controller
     public function index(Request $request)
     {
         try {
+            if( $request->isAdmin && !$request->client_id ){
+                $children = Child::all();
+            }
 
-            $children = Child::where('client_id', $request->client_id)->get();
+            if($request->client_id){
+                $children = Child::where('client_id', $request->client_id)->get();
+            }
+
 
             return response()->json([
                 'children' => ChildIndexResource::collection($children),
@@ -131,7 +137,7 @@ class ChildController extends Controller
                 ]);
             }
 
-            if($request->client_id != $child->client_id){
+            if($request->client_id != $child->client_id && !$request->isAdmin){
                 return response()->json([
                     'errors' => ['You can not show this child.'],
                     'status'=> 403
@@ -179,6 +185,7 @@ class ChildController extends Controller
 
             if($validator->fails()){
                 return response()->json([
+                    'child' => new ChildIndexResource($child),
                     'errors'=>$validator->getMessageBag(),
                     'status'=>Response::HTTP_BAD_REQUEST
                 ]);
@@ -257,7 +264,7 @@ class ChildController extends Controller
                 ]);
             }
 
-            if($request->client_id != $child->client_id){
+            if($request->client_id != $child->client_id && !$request->isAdmin){
                 return response()->json([
                     'errors' =>['You can not delete this child.'],
                     'status'=>401
@@ -268,7 +275,7 @@ class ChildController extends Controller
             $child->delete();
 
             return response()->json([
-                'message' => 'Child info has been deleted',
+                'messages' => ['Child info has been deleted'],
                 'status'=>Response::HTTP_ACCEPTED
             ]);
 
