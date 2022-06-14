@@ -30,10 +30,14 @@ class ReservationController extends Controller
     public function index(Request $request)
     {
         try{
-
-            $reservations = Reservation::where(
-                [['client_id', '=', $request->client_id]]
-                )->get();
+            if($request->isAdmin && !$request->client_id){
+                $reservations = Reservation::all();
+            } else {
+                $reservations = Reservation::where(
+                    [['client_id', '=', $request->client_id]]
+                    )->get();
+            }
+            
 
             return response()->json([
                 'reservations' => ReservationIndexResource::collection($reservations),
@@ -79,7 +83,7 @@ class ReservationController extends Controller
 
             $fields = $validator->validated();
             $fields['client_id'] = $request->client_id;
-
+            $fields['reservation_start_date'] = $fields['reservation_start_date']?? date("Y-m-d");
 
             $reservation = Reservation::create($fields);
             $child = Child::findOrFail($reservation->child_id);
@@ -135,7 +139,7 @@ class ReservationController extends Controller
     {
         try {
             $reservation = Reservation::find($id);
-			if(! $reservation || $reservation->client_id != $request->client_id ) {
+			if((! $reservation || $reservation->client_id != $request->client_id) && !$request->isAdmin ) {
 				return response()->json([
                     'errors' =>[ 'You can not show this reservation.'],
                     'status' => Response::HTTP_UNAUTHORIZED
