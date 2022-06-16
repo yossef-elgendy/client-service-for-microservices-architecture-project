@@ -52,8 +52,9 @@ class ReviewController extends Controller
                     ]);
             }
 
+            $reviews = Review::all();
             return response()->json([
-                'reviews' => [],
+                'reviews' => ReviewResource::collection($reviews),
                 'status' => Response::HTTP_ACCEPTED
             ]);
 
@@ -121,6 +122,8 @@ class ReviewController extends Controller
     }
 
 
+   
+
 
     /**
      * Update the specified resource in storage.
@@ -183,7 +186,7 @@ class ReviewController extends Controller
 
             $review = Review::findOrFail($id);
 
-            if($review->client_id !=  $request->client_id){
+            if($review->client_id !=  $request->client_id && !$request->isAdmin){
 
                 return response()->json([
                     'errors' => ['You cannot delete this review'],

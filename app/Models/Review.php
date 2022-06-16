@@ -18,7 +18,7 @@ class Review extends Model
     ];
 
     const TYPE = [
-        'App\Nursery' => 'Nursery Review',
-        'App\CourseNursery'=> 'Course Review'
+        'App\Nursery' => 'Nursery',
+        'App\CourseNursery'=> 'Course'
     ];
 }

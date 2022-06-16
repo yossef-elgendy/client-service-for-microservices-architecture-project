@@ -31,8 +31,7 @@ Route::apiResource('reservations', ReservationController::class)->except(['destr
 Route::apiResource("mediafiles", MediafileController::class)
 ->except(['show']);
 
-Route::apiResource("reviews", ReviewController::class)
-->except(['show']);
+Route::apiResource("reviews", ReviewController::class);
 
 Route::apiResource('clients', ClientController::class)->except(['show']);
 Route::get('/clients/profile', [ClientController::class, 'show']);

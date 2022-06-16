@@ -23,7 +23,8 @@ class ReviewResource extends JsonResource
             'client_fullname' => $client->fullname,
             'rate' => $this->rate,
             'content' => $this->content,
-            'type' => Review::TYPE[$this->model_type]
+            'type' => Review::TYPE[$this->model_type],
+            'model_id'=> $this->model_id
         ];
     }
 }
