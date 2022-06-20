@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\PayMobController;
 use App\Http\Requests\UpdateSubscriptionRequest;
 use App\Http\Resources\Subscription\SubscriptionIndexResoruce;
 use App\Jobs\ClientDispatched\ClientCancelSubscription;
@@ -73,7 +74,7 @@ class SubscriptionController extends Controller
                 ]);
             }
 
-			if($subscription->child()->client_id !== $request->client_id) {
+			if($subscription->child->client_id !== $request->client_id) {
                 return response()->json([
                     'errors' => ['You can not update this subscription.'],
                     'status' => Response::HTTP_UNAUTHORIZED,
@@ -91,21 +92,22 @@ class SubscriptionController extends Controller
 
 			$data = $validator->validated();
 
-            $subscription->update($data);
+            $subscription->update([
+                'start_date'=> $data['start_date'],
+                'due_date'=>date('Y-m-d', strtotime($subscription->start_date. ' + 1 months')),
+                'payment_date'=>null,
+                'status' => 0
+            ]);
             
-            ClientSubscriptionRenewJob::dispatch([
-                'subscription_id'=> $subscription->id,
-                'start_date' => $subscription->start_date,
-                'due_date' => $subscription->due_date,
-                'payment_date' => $subscription->payment_date,
-                'payment_method' => $subscription->payment_method,
-                'status' => $subscription->status,
-            ])->onQueue(config('queue.rabbitmq_queue.provider_service'))
-            ->onConnection('rabbitmq');
+            $pay_mob = new PayMobController();
+            $result = $pay_mob->renewSub($subscription->reservation->order->id, $subscription->payment_method);
+            $result = json_decode($result->getContent());
 
             return response()->json([
                 'data' => new SubscriptionIndexResoruce($subscription),
-                'status' => Response::HTTP_CREATED,
+                'message'=> $result->message,
+                'payment_status'=> Subscription::SUBSCRIPTION_STATUS[$result->payment_status]??Subscription::SUBSCRIPTION_STATUS[0],
+                'status' => $result->status,
             ]);
 
 		} catch (\Exception $e) {
@@ -135,7 +137,7 @@ class SubscriptionController extends Controller
             ]);
         }
 
-        ClientSubscriptionCancelJob::dispatch($subscription->id)
+        ClientSubscriptionCancelJob::dispatch(['subscription_id' => $subscription->id])
         ->onQueue(config('queue.rabbitmq_queue.provider_service'))
         ->onConnection('rabbitmq');
 

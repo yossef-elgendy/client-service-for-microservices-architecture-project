@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\ServicesDispatched\UserNotificationSendJob;
 use App\Notifications\Recieved\ReservationInformation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -75,8 +76,19 @@ class Reservation extends Model
             'reply' => "Deleted due to no response."
         ]);
 
-        $client = User::find($this->client_id);
-        $client->notify(new ReservationInformation($this));
+        UserNotificationSendJob::dispatch([
+            'user_id' => $this->client_id,
+            'title' => 'Reservation Canceled',
+            'body' => '',
+            'data' => [
+              'reservation_id' => $this->id,
+              'child_name' => $this->child->name,
+              'nursery_id' => $this->nursery_id,
+              'reply' => $this->reply
+            ],
+          ])
+            ->onConnection('rabbitmq')
+            ->onQueue(config('queue.rabbitmq_queue.api_gateway_service'));
     }
 
     public function order(){

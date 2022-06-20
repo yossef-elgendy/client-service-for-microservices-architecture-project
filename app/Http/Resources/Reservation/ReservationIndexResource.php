@@ -23,6 +23,7 @@ class ReservationIndexResource extends JsonResource
             'parent_name'=> $client->fullname,
             'nursery_id'=> $this->nursery_id,
             'timetable_id'=>$this->child->timetable_id ,
+            'order_id'=> $this->order->id ?? null,
             'child_name'=> $this->child->name,
             'type' => Reservation::RESERVATION_TYPE[$this->type] ?? Reservation::RESERVATION_TYPE[0]  ,
             "status" => Reservation::RESERVATION_STATUS[$this->status] ?? Reservation::RESERVATION_STATUS[0],

@@ -43,8 +43,8 @@ Route::get('/notifications', function(Request $request) {
 });
 
 Route::group(['prefix' => 'payment'], function() {
-    Route::post('{orderId}/pay/redirect', [PayMobController::class, 'checkingOut']);
-    Route::get('pay/callback', [PayMobController::class, 'processedCallback']);
+    Route::post('{orderId}/pay/redirect/{payment_method}', [PayMobController::class, 'checkingOut']);
+    Route::get('pay/callback', [PayMobController::class, 'processedCallback']); // for card only
 });
 
 

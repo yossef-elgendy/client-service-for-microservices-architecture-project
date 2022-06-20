@@ -11,7 +11,6 @@ class Subscription extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'id',
         'child_id',
         'nursery_id',
         'start_date',

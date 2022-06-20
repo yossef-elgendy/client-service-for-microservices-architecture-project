@@ -25,8 +25,7 @@ class UpdateSubscriptionRequest extends FormRequest
     {
         return [
             'client_id' => 'required|exists:clients,id',
-            'start_date' => 'nullable|date',
-            'due_date' => 'nullable|date',
+            'start_date' => 'required|date',
             'payment_date' => 'nullable|date',
         ];
     }
