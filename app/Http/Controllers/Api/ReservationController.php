@@ -245,7 +245,7 @@ class ReservationController extends Controller
                 if(! $reservation ){
                     return response()->json([
                         'reservation' =>[ ],
-                        'status' => Response::HTTP_NOT_FOUND
+                        'status' => Response::HTTP_OK
                     ]);
                 }
 
