@@ -2,7 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\ServicesDispatched\ServiceRegister;
+
+use App\Jobs\ServicesDispatched\ServiceRegisterJob;
 use Illuminate\Console\Command;
 
 class ApplicationBootCommand extends Command
@@ -38,7 +39,7 @@ class ApplicationBootCommand extends Command
      */
     public function handle()
     {
-        ServiceRegister::dispatch([
+        ServiceRegisterJob::dispatch([
             'name' => env('SERVICE_NAME', 'client'),
             'ip_address' => env('SERVICE_IP_ADDRESS', 'client_client'),
             'port' => env('SERVICE_PORT', '8002'),
