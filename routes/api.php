@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\PayMobController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use Illuminate\Http\Request;
@@ -47,7 +48,7 @@ Route::group(['prefix' => 'payment'], function() {
     Route::get('pay/callback', [PayMobController::class, 'processedCallback']); // for card only
 });
 
-
+Route::apiResource('subscriptions', SubscriptionController::class)->except(['store']);
 
 
 
