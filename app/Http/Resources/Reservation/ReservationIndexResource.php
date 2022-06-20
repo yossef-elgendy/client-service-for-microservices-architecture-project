@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Reservation;
 
-use App\Models\Child;
+
 use App\Models\Client;
 use App\Models\Reservation;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -22,7 +22,8 @@ class ReservationIndexResource extends JsonResource
             'id'=>$this->id,
             'parent_name'=> $client->fullname,
             'nursery_id'=> $this->nursery_id,
-            'child_name'=> Child::find($this->child_id)->name,
+            'timetable_id'=>$this->child->timetable_id ,
+            'child_name'=> $this->child->name,
             'type' => Reservation::RESERVATION_TYPE[$this->type] ?? Reservation::RESERVATION_TYPE[0]  ,
             "status" => Reservation::RESERVATION_STATUS[$this->status] ?? Reservation::RESERVATION_STATUS[0],
             'reservation_start_date'=> $this->reservation_start_date,
