@@ -40,11 +40,11 @@ class SubscriptionController extends Controller
     }
   }
 
-  public function show($id)
+  public function show(Request $request, $id)
   {
     try {
-
-        if(! $subscription = Subscription::find($id)) {
+        $subscription = Subscription::find($id);
+        if(! $subscription || $subscription->reservation->client_id != $request->client_id) {
             return response()->json([
                 'errors' => ['You can not show this subscription.'],
                 'status' => Response::HTTP_UNAUTHORIZED,
@@ -123,9 +123,10 @@ class SubscriptionController extends Controller
   public function destroy(Request $request, $id){
     try{
 
-        if(! $subscription = Subscription::find($id)) {
+        $subscription = Subscription::find($id);
+        if(! $subscription || $subscription->reservation->client_id != $request->client_id) {
             return response()->json([
-                'errors' => ['You can not update this subscription.'],
+                'errors' => ['You can not delete this subscription.'],
                 'status' => Response::HTTP_UNAUTHORIZED,
             ]);
         }
@@ -151,7 +152,7 @@ class SubscriptionController extends Controller
         return response()->json([
             'errors' => [$e->getMessage()],
             'status' => Response::HTTP_NOT_FOUND,
-            ]);
+        ]);
     }
   }
 }
