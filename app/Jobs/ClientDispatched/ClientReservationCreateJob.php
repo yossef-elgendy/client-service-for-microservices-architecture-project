@@ -2,6 +2,7 @@
 
 namespace App\Jobs\ClientDispatched;
 
+use App\Models\Child;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -10,11 +11,12 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ClientReservationReject implements ShouldQueue
+class ClientReservationCreateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $data;
+
     /**
      * Create a new job instance.
      *
@@ -22,7 +24,7 @@ class ClientReservationReject implements ShouldQueue
      */
     public function __construct($data)
     {
-        $this->data = $data;
+        $this->data = $data ;
     }
 
     /**
@@ -32,7 +34,7 @@ class ClientReservationReject implements ShouldQueue
      */
     public function handle()
     {
-      //
 
+        //
     }
 }

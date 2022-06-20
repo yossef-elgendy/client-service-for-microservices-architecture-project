@@ -9,11 +9,11 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ClientReservationPayment implements ShouldQueue
+class ClientNurseryRateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $data;
+    protected $data ;
     /**
      * Create a new job instance.
      *

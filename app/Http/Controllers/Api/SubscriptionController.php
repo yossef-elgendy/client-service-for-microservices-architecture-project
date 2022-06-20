@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateSubscriptionRequest;
 use App\Http\Resources\Subscription\SubscriptionIndexResoruce;
 use App\Jobs\ClientDispatched\ClientCancelSubscription;
 use App\Jobs\ClientDispatched\ClientRenewSubscription;
+use App\Jobs\ClientDispatched\ClientSubscriptionCancelJob;
+use App\Jobs\ClientDispatched\ClientSubscriptionRenewJob;
 use App\Models\Child;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
@@ -91,7 +93,7 @@ class SubscriptionController extends Controller
 
             $subscription->update($data);
             
-            ClientRenewSubscription::dispatch([
+            ClientSubscriptionRenewJob::dispatch([
                 'subscription_id'=> $subscription->id,
                 'start_date' => $subscription->start_date,
                 'due_date' => $subscription->due_date,
@@ -133,7 +135,7 @@ class SubscriptionController extends Controller
             ]);
         }
 
-        ClientCancelSubscription::dispatch($subscription->id)
+        ClientSubscriptionCancelJob::dispatch($subscription->id)
         ->onQueue(config('queue.rabbitmq_queue.provider_service'))
         ->onConnection('rabbitmq');
 

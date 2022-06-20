@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReviewRequest;
 use App\Http\Requests\UpdateReviewRequest;
 use App\Http\Resources\Review\ReviewResource;
-use App\Jobs\ClientDispatched\CourseNurseryRating;
-use App\Jobs\ClientDispatched\NurseryRating;
+use App\Jobs\ClientDispatched\ClientCourseNurseryRateJob;
+use App\Jobs\ClientDispatched\ClientNurseryRateJob;
 use App\Models\Review;
 use Exception;
 use Illuminate\Support\Facades\Validator;
@@ -96,13 +96,13 @@ class ReviewController extends Controller
             $review = Review::create($fields);
 
             if($request->model_type == "nursery"){
-                NurseryRating::dispatch([
+                ClientNurseryRateJob::dispatch([
                     'nursery_id' => $review->model_id,
                     'rate'=> $review->rate
                 ])->onConnection('rabbitmq')->onQueue(config('queue.rabbitmq_queue.provider_service'));
 
             } elseif($request->model_type == "course") {
-                CourseNurseryRating::dispatch([
+                ClientCourseNurseryRateJob::dispatch([
                     'course_nursery_id'=> $review->model_id,
                     'rate'=> $review->rate
                 ])->onConnection('rabbitmq')->onQueue(config('queue.rabbitmq_queue.provider_service'));

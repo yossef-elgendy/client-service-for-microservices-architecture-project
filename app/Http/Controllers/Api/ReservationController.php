@@ -5,15 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
-use App\Http\Resources\Reservation\ReservationCreatedJobResource;
 use App\Http\Resources\Reservation\ReservationIndexResource;
-use App\Jobs\ClientDispatched\ClientReservationReject;
-use App\Jobs\ClientDispatched\ReservationCreated;
+use App\Jobs\ClientDispatched\ClientReservationCancelJob;
+use App\Jobs\ClientDispatched\ClientReservationCreateJob;
 use App\Models\Reservation;
 use App\Models\Child;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -88,7 +86,7 @@ class ReservationController extends Controller
             $reservation = Reservation::create($fields);
             $child = Child::findOrFail($reservation->child_id);
 
-            ReservationCreated::dispatch([
+            ClientReservationCreateJob::dispatch([
                 'reservation_id' => $reservation->id,
                 'client_id'=> $reservation->client_id,
                 'nursery_id'=> $reservation->nursery_id,
@@ -207,7 +205,7 @@ class ReservationController extends Controller
                 if($request->client_end){
                     $reservation->update(['client_end'=> $data['client_end']]);
 
-                    ClientReservationReject::dispatch($reservation->id)
+                    ClientReservationCancelJob::dispatch($reservation->id)
                     ->onQueue(config('queue.rabbitmq_queue.provider_service'))
                     ->onConnection('rabbitmq');
 
@@ -237,7 +235,27 @@ class ReservationController extends Controller
 		}
     }
 
+    public function reservationByChild(Request $request, $id){
+        try {
+            $reservation = Reservation::where('child_id', $id)->first();
+			if((! $reservation || $reservation->client_id != $request->client_id) && !$request->isAdmin ) {
+				return response()->json([
+                    'errors' =>[ 'You can not show this reservation.'],
+                    'status' => Response::HTTP_UNAUTHORIZED
+                ]);
+			}
 
+			return response()->json([
+                'reservation'=> new ReservationIndexResource($reservation),
+                'status'=> Response::HTTP_ACCEPTED
+            ]);
+		} catch (\Exception $e) {
+			return response()->json([
+                'errors' => [$e->getMessage()],
+                'status'=> Response::HTTP_NOT_FOUND
+            ]);
+		}
+    }
 
 
 

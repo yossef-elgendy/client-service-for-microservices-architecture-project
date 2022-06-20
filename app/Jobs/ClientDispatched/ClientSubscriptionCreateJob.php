@@ -9,17 +9,16 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ClientCancelSubscription implements ShouldQueue
+class ClientSubscriptionCreateJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $data;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    protected $data;
-    
     public function __construct($data)
     {
         $this->data = $data;

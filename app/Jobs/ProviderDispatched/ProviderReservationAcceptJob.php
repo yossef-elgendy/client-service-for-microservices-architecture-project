@@ -2,6 +2,7 @@
 
 namespace App\Jobs\ProviderDispatched;
 
+use App\Jobs\ServicesDispatched\UserNotificationSendJob;
 use App\Models\Child;
 use App\Models\Client;
 use App\Models\Order;
@@ -15,7 +16,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ProviderReservationAccept implements ShouldQueue
+class ProviderReservationAcceptJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -65,15 +66,32 @@ class ProviderReservationAccept implements ShouldQueue
 
             $order = Order::create([
                 'reservation_id'=> $this->data['reservation_id'],
-                'totalCost'=>$totalCost,
+                'totalCost'=> $totalCost,
             ]);
 
-            $client = Client::find($this->data['client_id']);
+            // $client = Client::find($this->data['client_id']);
 
-            $client->notify(new ReservationInformation([
-                'reservation' => $reservation,
-                'order' => $order
-            ]));
+            // $client->notify(new ReservationInformation([
+            //     'reservation' => $reservation,
+            //     'order' => $order
+            // ]));
+
+            UserNotificationSendJob::dispatch([
+                'user_id' => $reservation->client_id,
+                'title' => 'Reservation Accepted',
+                'body' => '',
+                'data' => [
+                  'reservation_id' => $reservation->id,
+                  'child_name' => $reservation->child->name,
+                  'nursery_id' => $reservation->nursery_id,
+                  'order' => [
+                    'order_id' => $order->id,
+                    'totalCost'=> $order->$totalCost
+                  ]
+                ],
+              ])
+                ->onConnection('rabbitmq')
+                ->onQueue(config('queue.rabbitmq_queue.api_gateway_service'));
 
         } catch (Exception $e){
             echo $e->getMessage();

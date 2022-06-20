@@ -27,6 +27,8 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('children', ChildController::class)->parameters(['children' => 'child']);
 
 Route::apiResource('reservations', ReservationController::class)->except(['destroy']);
+Route::get('/reservations/child/{id}', [ReservationController::class , 'reservationByChild']);
+
 
 Route::apiResource("mediafiles", MediafileController::class)
 ->except(['show']);

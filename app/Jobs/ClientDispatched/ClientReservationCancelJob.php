@@ -2,6 +2,7 @@
 
 namespace App\Jobs\ClientDispatched;
 
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -9,11 +10,11 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class NurseryRating implements ShouldQueue
+class ClientReservationCancelJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $data ;
+    protected $data;
     /**
      * Create a new job instance.
      *
@@ -31,6 +32,7 @@ class NurseryRating implements ShouldQueue
      */
     public function handle()
     {
-        //
+      //
+
     }
 }

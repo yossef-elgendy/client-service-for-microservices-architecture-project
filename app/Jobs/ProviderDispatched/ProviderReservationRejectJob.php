@@ -2,6 +2,7 @@
 
 namespace App\Jobs\ProviderDispatched;
 
+use App\Jobs\ServicesDispatched\UserNotificationSendJob;
 use App\Models\Client;
 use App\Models\Reservation;
 use App\Notifications\Recieved\ReservationInformation;
@@ -13,7 +14,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ProviderReservationReject implements ShouldQueue
+class ProviderReservationRejectJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -47,8 +48,21 @@ class ProviderReservationReject implements ShouldQueue
                 'reply' => $this->data['reply']
             ]);
 
-            $client = Client::findOrFail($reservation->client_id);
-            $client->notify(new ReservationInformation($reservation));
+            // $client = Client::findOrFail($reservation->client_id);
+            // $client->notify(new ReservationInformation($reservation));
+            UserNotificationSendJob::dispatch([
+                'user_id' => $reservation->client_id,
+                'title' => 'Reservation Canceled',
+                'body' => '',
+                'data' => [
+                  'reservation_id' => $reservation->id,
+                  'child_name' => $reservation->child->name,
+                  'nursery_id' => $reservation->nursery_id,
+                ],
+              ])
+                ->onConnection('rabbitmq')
+                ->onQueue(config('queue.rabbitmq_queue.api_gateway_service'));
+
 
             if(isset($this->data['provider_end'])) $reservation->delete();
 

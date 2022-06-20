@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\ClientDispatched\ClientReservationPayment;
+use App\Jobs\ClientDispatched\ClientSubscriptionCreateJob;
 use App\Models\Client;
 use App\Models\Order;
 use BaklySystems\PayMob\Facades\PayMob;
@@ -181,7 +182,7 @@ class PayMobController extends Controller
 
         if ($isSuccess && !$isVoided && !$isRefunded) { // transcation succeeded.
             $this->succeeded($order);
-            ClientReservationPayment::dispatch($order->reservation_id);
+            ClientSubscriptionCreateJob::dispatch($order->reservation_id);
             return response()->json(['success' => $isSuccess], 200);
 
         } elseif ($isSuccess && $isVoided) { // transaction voided.

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreChildRequest;
 use App\Http\Requests\UpdateChildRequest;
 use App\Http\Resources\Child\ChildIndexResource;
-use App\Jobs\ClientDispatched\ClientChildUpdated;
+use App\Jobs\ClientDispatched\ClientChildUpdateJob;
 use App\Models\Child;
 use App\Models\Media;
 use Exception;
@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\Test\Constraint\ResponseIsSuccessful;
 
 class ChildController extends Controller
 {
@@ -195,7 +194,7 @@ class ChildController extends Controller
 
             $child->update(Arr::except($fields, ['mediafile']));
 
-            ClientChildUpdated::dispatch([
+            ClientChildUpdateJob::dispatch([
                 'child_id' => $id,
                 'name' => $child->name,
                 'age'=> $child->age,
