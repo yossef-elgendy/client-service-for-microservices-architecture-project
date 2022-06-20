@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Jobs\ClientDispatched\ClientReservationPayment;
 use App\Jobs\ClientDispatched\ClientSubscriptionCreateJob;
 use App\Models\Client;
 use App\Models\Order;
@@ -87,6 +86,7 @@ class PayMobController extends Controller
     {
         Validator::make($request->all(), [
             'orderId'         => 'required|integer',
+            'client_id'       => 'required|integer',
             'card_number'     => 'required|numeric|digits:16',
             'card_holdername' => 'required|string|max:255',
             'card_expiry_mm'  => 'required|integer|max:12',
@@ -94,7 +94,8 @@ class PayMobController extends Controller
             'card_cvn'        => 'required|integer|digits:3',
         ]);
 
-        $user    = auth()->user();
+        $user    = Client::find($request->client_id);
+        $fullname = explode(' ', $user->fullname);
         $order   = Order::findOrFail($request->orderId);
         $payment = PayMob::makePayment( // make transaction on Paymob servers.
     //      $payment_key_token,
@@ -104,8 +105,8 @@ class PayMobController extends Controller
           $request->card_expiry_yy,
           $request->card_cvn,
           $order->paymob_order_id,
-          $user->firstname,
-          $user->lastname,
+          $fullname[0],
+          $fullname[count($fullname)-1],
           $user->email,
           $user->phone
         );
@@ -174,7 +175,7 @@ class PayMobController extends Controller
         $orderId = $request->order;
 
         $order   = Order::where('paymob_order_id', $orderId)->first();
-
+        ClientSubscriptionCreateJob::dispatch($order->reservation_id);
         // Statuses.
         $isSuccess  = $request->success == "false"? false : true;
         $isVoided   = $request->is_voided == "false"? false : true;
@@ -182,7 +183,6 @@ class PayMobController extends Controller
 
         if ($isSuccess && !$isVoided && !$isRefunded) { // transcation succeeded.
             $this->succeeded($order);
-            ClientSubscriptionCreateJob::dispatch($order->reservation_id);
             return response()->json(['success' => $isSuccess], 200);
 
         } elseif ($isSuccess && $isVoided) { // transaction voided.

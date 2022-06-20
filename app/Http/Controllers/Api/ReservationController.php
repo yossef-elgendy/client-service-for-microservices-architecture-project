@@ -238,7 +238,17 @@ class ReservationController extends Controller
     public function reservationByChild(Request $request, $id){
         try {
             $reservation = Reservation::where('child_id', $id)->first();
-			if((! $reservation || $reservation->client_id != $request->client_id) && !$request->isAdmin ) {
+
+            
+
+			if((!$reservation || $reservation->client_id != $request->client_id) && !$request->isAdmin ) {
+                if(! $reservation ){
+                    return response()->json([
+                        'reservation' =>[ ],
+                        'status' => Response::HTTP_NOT_FOUND
+                    ]);
+                }
+
 				return response()->json([
                     'errors' =>[ 'You can not show this reservation.'],
                     'status' => Response::HTTP_UNAUTHORIZED
