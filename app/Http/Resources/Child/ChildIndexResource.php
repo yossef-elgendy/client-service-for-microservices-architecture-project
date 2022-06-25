@@ -22,16 +22,10 @@ class ChildIndexResource extends JsonResource
     {
 
 
-        $profile_image = Media::whereHasMorph(
-            'mediafileable',
-            [Child::class],
-            function(Builder $query) {
-              $query->where([
-                ['model_id', '=', $this->id],
-                ['type', '=', 'child_image']
-              ]);
-            }
-          )->first();
+        $profile_image = Media::where([
+          ['model_type', '=', 'App\Child'],
+          ['model_id', '=', $this->id]
+        ])->first();
 
 
         $client =  Client::findOrFail($this->client_id);
