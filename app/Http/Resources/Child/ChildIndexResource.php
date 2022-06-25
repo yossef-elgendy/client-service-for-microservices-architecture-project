@@ -28,7 +28,7 @@ class ChildIndexResource extends JsonResource
             function(Builder $query) {
               $query->where([
                 ['model_id', '=', $this->id],
-                ['type', '=', 'profile_image']
+                ['type', '=', 'child_image']
               ]);
             }
           )->first();
@@ -46,7 +46,7 @@ class ChildIndexResource extends JsonResource
             'timetable_id'=>$this->timetable_id,
             'marks' => $this->marks,
             'rate' => $this->rate,
-            'profile_image' => $profile_image
+            'profile_image' => $this->mediafileDownload($profile_image)
         ];
     }
 }
