@@ -46,7 +46,7 @@ class ChildIndexResource extends JsonResource
             'timetable_id'=>$this->timetable_id,
             'marks' => $this->marks,
             'rate' => $this->rate,
-            'profile_image' => $this->mediafileDownload($profile_image)
+            'profile_image' => $profile_image
         ];
     }
 }

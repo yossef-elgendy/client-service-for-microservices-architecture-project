@@ -74,7 +74,7 @@ class ChildController extends Controller
             if($request->mediafile) {
                 $mediafile_data = [
                   'mediafile' => $request->mediafile,
-                  'mediafile_type' => 'child_image',
+                  'mediafile_type' => 'profile_image',
                   'model_id' => $child->id,
                   'model_type' => 'App\Child',
                   'is_default' => false
