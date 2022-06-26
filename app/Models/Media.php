@@ -41,7 +41,7 @@ class Media extends Model
       ];
 
       const DEFAULT_IMAGE_NAME = [
-        'App\Child'    => 'default_child.png',
+        'App\Child'    => 'default_child.svg',
       ];
 
       public function mediafileable()
