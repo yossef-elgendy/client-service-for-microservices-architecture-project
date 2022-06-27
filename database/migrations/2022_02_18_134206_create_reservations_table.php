@@ -30,10 +30,16 @@ class CreateReservationsTable extends Migration
             $table->timestamps();
 
             $table->foreign('child_id')
-            ->references('id')
-            ->on('children')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->references('id')
+                ->on('children')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+
+            $table->foreign('client_id')
+                ->references('id')
+                ->on('clients')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
 
         });
     }

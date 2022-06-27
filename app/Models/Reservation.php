@@ -94,4 +94,9 @@ class Reservation extends Model
     public function order(){
         return $this->hasOne(Order::class);
     }
+
+     
+    public function subscription(){
+        return $this->belongsTo(Subscription::class);
+    }
 }

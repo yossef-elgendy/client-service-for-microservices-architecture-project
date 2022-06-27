@@ -67,4 +67,9 @@ class Child extends Model
         return $this->hasOne(Subscription::class);
     }
 
+    public function reservation()
+    {
+        return $this->hasOne(Reservation::class);
+    }
+
 }

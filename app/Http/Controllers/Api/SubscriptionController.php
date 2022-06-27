@@ -11,6 +11,7 @@ use App\Jobs\ClientDispatched\ClientRenewSubscription;
 use App\Jobs\ClientDispatched\ClientSubscriptionCancelJob;
 use App\Jobs\ClientDispatched\ClientSubscriptionRenewJob;
 use App\Models\Child;
+use App\Models\Client;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -21,14 +22,13 @@ class SubscriptionController extends Controller
     public function index(Request $request)
   {
     try {
-        $children = Child::where('client_id', $request->client_id)->get();
-        $subscriptions = [];
-        foreach($children as $child){
-            array_push($subscriptions, $child->subscription());
-        }
+   
+        $client = Client::findOrFail($request->client_id);
+        $subscriptions =  $client->children()->with('subscription')->get()->pluck('subscription')->flatten(); 
+       
 
         return response()->json([
-          'data' => SubscriptionIndexResoruce::collection($subscriptions),
+          'subcriptions' => SubscriptionIndexResoruce::collection($subscriptions),
           'status' => Response::HTTP_OK,
         ]);
 

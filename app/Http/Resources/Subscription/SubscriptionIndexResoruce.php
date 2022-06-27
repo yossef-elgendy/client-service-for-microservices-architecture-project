@@ -19,11 +19,11 @@ class SubscriptionIndexResoruce extends JsonResource
             'id' => $this->id,
             'nursery_id' => $this->nursery_id,
             'child_id' => $this->child_id,
-            'status' => Subscription::SUBSCRIPTION_STATUS[$this->status],
+            'status' => Subscription::SUBSCRIPTION_STATUS[$this->status ?? 0],
             'start_date' => $this->start_date,
             'due_date' => $this->due_date,
             'payment_date' => $this->payment_date,
-            'payment_method' => Subscription::PAYMENT_METHOD[$this->payment_method],
+            'payment_method' => Subscription::PAYMENT_METHOD[$this->payment_method ?? 0],
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
           ];
