@@ -70,11 +70,31 @@ class ReservationController extends Controller
                 ]);
             }
 
-
+            
             if($request->client_id != Child::find($request->child_id)->client_id){
                 return response()->json([
                     'errors'=>['Error the child don\'t exist.'],
                     'status'=> 400
+                ]);
+            }
+
+            if($reservation = Reservation::where([
+                    ['child_id', $request->child_id],
+                    ['status',  0]
+                ])->get()->count() > 1){
+                    return response()->json([
+                        'errors'=>['Error the child is already waiting for nursery response.'],
+                        'status'=> 401
+                    ]);
+            }
+
+            if($reservation = Reservation::where([
+                ['child_id', $request->child_id],
+                ['status',  1]
+            ])->get()->count() > 1){
+                return response()->json([
+                    'errors'=>['Error the child already has an active reservation.'],
+                    'status'=> 401
                 ]);
             }
 
@@ -237,18 +257,12 @@ class ReservationController extends Controller
 
     public function reservationByChild(Request $request, $id){
         try {
-            $reservation = Reservation::where('child_id', $id)->first();
 
-            
+            $reservation = Reservation::where([['child_id', $id], ['client_id', $request->client_id]])->first();
 
-			if((!$reservation || $reservation->client_id != $request->client_id) && !$request->isAdmin ) {
-                if(! $reservation ){
-                    return response()->json([
-                        'reservation' =>[ ],
-                        'status' => Response::HTTP_OK
-                    ]);
-                }
-
+        
+			if(!$reservation ) {
+               
 				return response()->json([
                     'errors' =>[ 'You can not show this reservation.'],
                     'status' => Response::HTTP_UNAUTHORIZED
@@ -259,6 +273,32 @@ class ReservationController extends Controller
                 'reservation'=> new ReservationIndexResource($reservation),
                 'status'=> Response::HTTP_ACCEPTED
             ]);
+		} catch (\Exception $e) {
+			return response()->json([
+                'errors' => [$e->getMessage()],
+                'status'=> Response::HTTP_NOT_FOUND
+            ]);
+		}
+    }
+
+
+    public function reservationsByChild(Request $request, $id){
+        try {
+
+            $reservations = Reservation::where([['child_id', $id], ['client_id', $request->client_id]])->withTrashed()->get();
+
+			if(!$reservations ) {
+				return response()->json([
+                    'errors' =>[ 'You can not show this reservation.'],
+                    'status' => Response::HTTP_UNAUTHORIZED
+                ]);
+			}
+
+			return response()->json([
+                'reservation'=> ReservationIndexResource::collection($reservations),
+                'status'=> Response::HTTP_ACCEPTED
+            ]);
+
 		} catch (\Exception $e) {
 			return response()->json([
                 'errors' => [$e->getMessage()],

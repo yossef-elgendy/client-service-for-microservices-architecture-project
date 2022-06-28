@@ -13,6 +13,7 @@ use App\Jobs\ClientDispatched\ClientSubscriptionRenewJob;
 use App\Models\Child;
 use App\Models\Client;
 use App\Models\Subscription;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
@@ -152,6 +153,52 @@ class SubscriptionController extends Controller
         return response()->json([
             'errors' => [$e->getMessage()],
             'status' => Response::HTTP_NOT_FOUND,
+        ]);
+    }
+  }
+
+
+
+  public function subscriptionsByChild(Request $request, $id)
+  {
+    try {
+        $subscriptions = Subscription::where('child_id', $id)->whereHas('reservation',
+        function(Builder $query) use($request){
+            return $query->where('client_id', $request->client_id);
+        })->get();
+        
+
+        return response()->json([
+            'data' => SubscriptionIndexResoruce::collection($subscriptions),
+            'status' => Response::HTTP_OK,
+            ]);
+
+    } catch (\Exception $e) {
+      return response()->json([
+          'errors' => [$e->getMessage()],
+          'status' => Response::HTTP_NOT_FOUND,
+        ]);
+    }
+  }
+
+
+  public function subscriptionByChild(Request $request, $id)
+  {
+    try {
+        $subscriptions = Subscription::where('child_id', $id)->whereHas('reservation',
+        function(Builder $query) use($request){
+            return $query->where('client_id', $request->client_id);
+        })->withTrashed()->get();
+
+        return response()->json([
+            'data' => SubscriptionIndexResoruce::collection($subscriptions),
+            'status' => Response::HTTP_OK,
+        ]);
+
+    } catch (\Exception $e) {
+      return response()->json([
+          'errors' => [$e->getMessage()],
+          'status' => Response::HTTP_NOT_FOUND,
         ]);
     }
   }

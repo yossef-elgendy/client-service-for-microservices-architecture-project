@@ -32,6 +32,7 @@ class CreateSubscriptionsTable extends Migration
               ->on('children')
               ->onUpdate('cascade')
               ->onDelete('restrict');
+              
             $table->foreign('reservation_id')
               ->references('id')
               ->on('reservations')

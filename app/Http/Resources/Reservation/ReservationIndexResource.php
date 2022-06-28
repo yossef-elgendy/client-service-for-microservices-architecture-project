@@ -28,7 +28,10 @@ class ReservationIndexResource extends JsonResource
             'type' => Reservation::RESERVATION_TYPE[$this->type] ?? Reservation::RESERVATION_TYPE[0]  ,
             "status" => Reservation::RESERVATION_STATUS[$this->status] ?? Reservation::RESERVATION_STATUS[0],
             'reservation_start_date'=> $this->reservation_start_date,
-            'provider_response'=> Reservation::PROVIDER_END[$this->provider_end] ?? Reservation::PROVIDER_END[0]
+            'provider_response'=> Reservation::PROVIDER_END[$this->provider_end] ?? Reservation::PROVIDER_END[0],
+            'deleted_at' => $this->deleted_at,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

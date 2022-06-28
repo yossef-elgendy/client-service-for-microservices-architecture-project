@@ -22,7 +22,7 @@ class CreateChildrenTable extends Migration
             $table->unsignedBigInteger('timetable_id')->nullable();
             $table->tinyInteger('status')->default(0);
             $table->tinyInteger('gender')->default(1); // updated 17/2/2022
-            $table->float('rate', 3, 2, true)->nullable(); // updated 17/2/2022
+            $table->json('rate')->nullable(); // updated 17/2/2022
             $table->json('marks')->nullable(); // updated 17/2/2022
             $table->timestamps();
             $table->softDeletes();

@@ -28,7 +28,8 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('children', ChildController::class)->parameters(['children' => 'child']);
 
 Route::apiResource('reservations', ReservationController::class)->except(['destroy']);
-Route::get('/reservations/child/{id}', [ReservationController::class , 'reservationByChild']);
+Route::get('/reservation/child/{id}', [ReservationController::class , 'reservationByChild']);
+Route::get('/reservations/child/{id}', [ReservationController::class , 'reservationsByChild']);
 
 
 Route::apiResource("mediafiles", MediafileController::class)
@@ -49,6 +50,8 @@ Route::group(['prefix' => 'payment'], function() {
 });
 
 Route::apiResource('subscriptions', SubscriptionController::class)->except(['store']);
+Route::get('/subscription/child/{id}', [SubscriptionController::class , 'subscriptionByChild']);
+Route::get('/subscriptions/child/{id}', [SubscriptionController::class , 'subscriptionsByChild']);
 
 
 
