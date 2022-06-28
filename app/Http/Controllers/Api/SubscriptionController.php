@@ -165,7 +165,10 @@ class SubscriptionController extends Controller
         $subscriptions = Subscription::where('child_id', $id)->whereHas('reservation',
         function(Builder $query) use($request){
             return $query->where('client_id', $request->client_id);
-        })->get();
+        })
+        ->orderBy('created_at', 'DSC')
+        ->withTrashed()
+        ->get();
         
 
         return response()->json([
@@ -185,13 +188,17 @@ class SubscriptionController extends Controller
   public function subscriptionByChild(Request $request, $id)
   {
     try {
-        $subscriptions = Subscription::where('child_id', $id)->whereHas('reservation',
+        $subscription = Subscription::where('child_id', $id)->whereHas('reservation',
         function(Builder $query) use($request){
-            return $query->where('client_id', $request->client_id);
-        })->withTrashed()->get();
+            return $query
+            ->where([['client_id', $request->client_id], ['status', 2]])
+            ->orWhere([['client_id', $request->client_id], ['status', 3]]);
+        })
+        ->orderBy('created_at', 'DESC')
+        ->first();
 
         return response()->json([
-            'data' => SubscriptionIndexResoruce::collection($subscriptions),
+            'subscription' => new SubscriptionIndexResoruce($subscription),
             'status' => Response::HTTP_OK,
         ]);
 
