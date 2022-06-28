@@ -45,15 +45,14 @@ class ProviderReservationAcceptJob implements ShouldQueue
 
         try {
             $reservation = Reservation::findOrFail($this->data['reservation_id']);
-            $reservation = $reservation->update([
-                'status' => 2,
-                'reply' => $this->data['reply']
+            $reservation->update([
+                'status' => $this->data['status'],
             ]);
-
-            $child = Child::findOrFail($reservation->child_id);
-            $child->update([
-                'nursery_id'=> $reservation->nursery_id
+            
+            $reservation->child()->update([
+                'nursery_id' => $reservation->nursery_id
             ]);
+            
 
             $totalCost = $this->data['subscription_fee'] ?? 0;
             if(isset($this->data['courses']))
@@ -83,6 +82,7 @@ class ProviderReservationAcceptJob implements ShouldQueue
                 'data' => [
                   'reservation_id' => $reservation->id,
                   'child_name' => $reservation->child->name,
+                  'child_id' => $reservation->child->id,
                   'nursery_id' => $reservation->nursery_id,
                   'order' => [
                     'order_id' => $order->id,

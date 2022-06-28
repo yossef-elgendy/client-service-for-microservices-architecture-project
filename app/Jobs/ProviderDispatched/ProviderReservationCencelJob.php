@@ -14,7 +14,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ProviderReservationRejectJob implements ShouldQueue
+class ProviderReservationCencelJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -41,9 +41,9 @@ class ProviderReservationRejectJob implements ShouldQueue
 
          try {
             $reservation = Reservation::findOrFail($this->data['reservation_id']);
-
+            print_r($reservation);
             $reservation->update([
-                'status' => 1,
+                'status' => $this->data['status'],
                 'provider_end'=> $this->data['provider_end'] ?? 0,
                 'reply' => $this->data['reply']
             ]);
@@ -57,6 +57,7 @@ class ProviderReservationRejectJob implements ShouldQueue
                 'data' => [
                   'reservation_id' => $reservation->id,
                   'child_name' => $reservation->child->name,
+                  'child_id'=>$reservation->child->id,
                   'nursery_id' => $reservation->nursery_id,
                 ],
               ])

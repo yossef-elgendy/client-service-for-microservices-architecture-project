@@ -6,11 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\PayMobController;
 use App\Http\Requests\UpdateSubscriptionRequest;
 use App\Http\Resources\Subscription\SubscriptionIndexResoruce;
-use App\Jobs\ClientDispatched\ClientCancelSubscription;
-use App\Jobs\ClientDispatched\ClientRenewSubscription;
 use App\Jobs\ClientDispatched\ClientSubscriptionCancelJob;
-use App\Jobs\ClientDispatched\ClientSubscriptionRenewJob;
-use App\Models\Child;
 use App\Models\Client;
 use App\Models\Subscription;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,7 +21,11 @@ class SubscriptionController extends Controller
     try {
    
         $client = Client::findOrFail($request->client_id);
-        $subscriptions =  $client->children()->with('subscription')->get()->pluck('subscription')->flatten(); 
+        $subscriptions =  $client->children()
+        ->whereHas('subscription')
+        ->with('subscription')
+        ->get()
+        ->pluck('subscription'); 
        
 
         return response()->json([
@@ -164,9 +164,9 @@ class SubscriptionController extends Controller
     try {
         $subscriptions = Subscription::where('child_id', $id)->whereHas('reservation',
         function(Builder $query) use($request){
-            return $query->where('client_id', $request->client_id);
+            $query->withTrashed()->where('client_id', $request->client_id);
         })
-        ->orderBy('created_at', 'DSC')
+        ->orderBy('created_at', 'desc')
         ->withTrashed()
         ->get();
         
@@ -190,15 +190,15 @@ class SubscriptionController extends Controller
     try {
         $subscription = Subscription::where('child_id', $id)->whereHas('reservation',
         function(Builder $query) use($request){
-            return $query
+            $query
             ->where([['client_id', $request->client_id], ['status', 2]])
             ->orWhere([['client_id', $request->client_id], ['status', 3]]);
         })
-        ->orderBy('created_at', 'DESC')
+        ->orderBy('created_at', 'desc')
         ->first();
 
         return response()->json([
-            'subscription' => new SubscriptionIndexResoruce($subscription),
+            'subscription' => $subscription ? new SubscriptionIndexResoruce($subscription) : null,
             'status' => Response::HTTP_OK,
         ]);
 
