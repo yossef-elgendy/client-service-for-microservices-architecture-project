@@ -78,20 +78,30 @@ class ReservationController extends Controller
                 ]);
             }
 
-            if($reservation = Reservation::where([
-                    ['child_id', $request->child_id],
-                    ['status',  0]
-                ])->get()->count() > 1){
+            $reservation_waiting = Reservation::where([
+                ['child_id', '=',$request->child_id],
+                ['status', '=', null]
+            ])->orWhere([
+                ['child_id', '=',$request->child_id],
+                ['status', '=', 0]
+            ])->first();
+
+            $reservation_active =  Reservation::where([
+                ['child_id', '=',$request->child_id],
+                ['status', '=', 2]
+            ])->orWhere([
+                ['child_id', '=',$request->child_id],
+                ['status', '=', 3]
+            ])->first();
+
+            if($reservation_waiting){
                     return response()->json([
                         'errors'=>['Error the child is already waiting for nursery response.'],
                         'status'=> 401
                     ]);
             }
 
-            if($reservation = Reservation::where([
-                ['child_id', $request->child_id],
-                ['status',  1]
-            ])->get()->count() > 1){
+            if($reservation_active){
                 return response()->json([
                     'errors'=>['Error the child already has an active reservation.'],
                     'status'=> 401
