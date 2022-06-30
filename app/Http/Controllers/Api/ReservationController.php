@@ -235,7 +235,7 @@ class ReservationController extends Controller
                 if($request->client_end){
                     $reservation->update(['client_end'=> $data['client_end']]);
 
-                    ClientReservationCancelJob::dispatch($reservation->id)
+                    ClientReservationCancelJob::dispatch(['reservation_id'=> $reservation->id])
                     ->onQueue(config('queue.rabbitmq_queue.provider_service'))
                     ->onConnection('rabbitmq');
 
