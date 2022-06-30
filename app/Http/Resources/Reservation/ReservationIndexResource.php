@@ -29,6 +29,7 @@ class ReservationIndexResource extends JsonResource
             "status" => Reservation::RESERVATION_STATUS[$this->status] ?? Reservation::RESERVATION_STATUS[0],
             'reservation_start_date'=> $this->reservation_start_date,
             'provider_response'=> Reservation::PROVIDER_END[$this->provider_end] ?? Reservation::PROVIDER_END[0],
+            'client_response' => Reservation::CLIENT_END[$this->client_end] ?? Reservation::CLIENT_END[0],
             'deleted_at' => $this->deleted_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
