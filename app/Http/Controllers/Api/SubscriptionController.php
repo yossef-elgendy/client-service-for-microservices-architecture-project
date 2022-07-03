@@ -11,6 +11,7 @@ use App\Models\Client;
 use App\Models\Subscription;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -86,7 +87,7 @@ class SubscriptionController extends Controller
 
 			if($validator->fails()) {
                 return response()->json([
-                    'errors' => $validator->getMessageBag(),
+                    'errors' => Arr::flatten($validator->getMessageBag()),
                     'status' => Response::HTTP_NOT_ACCEPTABLE,
                 ]);
 			}
@@ -172,7 +173,7 @@ class SubscriptionController extends Controller
         
 
         return response()->json([
-            'data' => SubscriptionIndexResoruce::collection($subscriptions),
+            'subcritpions' => SubscriptionIndexResoruce::collection($subscriptions),
             'status' => Response::HTTP_OK,
             ]);
 

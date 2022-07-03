@@ -67,14 +67,22 @@ class Reservation extends Model
 
     public function prunable()
     {
-        return static::where('created_at', '<=', now()->subDays(10));
+        return static::where([
+            ['created_at', '<=', now()->subDays(10)],
+            ['status', '=', 0]
+        ]);
     }
 
     protected function pruning()
     {
+       
         $this->update([
             'reply' => "Deleted due to no response."
         ]);
+        
+
+
+        
 
         UserNotificationSendJob::dispatch([
             'user_id' => $this->client_id,

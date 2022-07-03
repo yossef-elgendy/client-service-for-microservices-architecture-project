@@ -12,6 +12,7 @@ use App\Models\Reservation;
 use App\Models\Child;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -65,7 +66,7 @@ class ReservationController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'errors'=>$validator->getMessageBag(),
+                    'errors'=> Arr::flatten($validator->getMessageBag()),
                     'status'=> 400
                 ]);
             }
@@ -217,7 +218,7 @@ class ReservationController extends Controller
 
 			if($validator->fails()) {
 				return response()->json([
-                    'errors' => $validator->getMessageBag(),
+                    'errors' => Arr::flatten($validator->getMessageBag()),
                     'status' =>Response::HTTP_NOT_ACCEPTABLE
                 ]);
 			}

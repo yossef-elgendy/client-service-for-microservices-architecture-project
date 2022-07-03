@@ -12,6 +12,7 @@ use App\Models\Review;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 
 use function PHPSTORM_META\type;
@@ -80,7 +81,7 @@ class ReviewController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'errors'=>$validator->getMessageBag(),
+                    'errors'=>Arr::flatten($validator->getMessageBag()),
                     'status'=> Response::HTTP_BAD_REQUEST
                 ]);
             }
@@ -150,7 +151,7 @@ class ReviewController extends Controller
             $validator = Validator::make($request->all(),$request->rules());
             if ($validator->fails()) {
                 return response()->json([
-                    'errors'=>$validator->getMessageBag(),
+                    'errors'=>Arr::flatten($validator->getMessageBag()),
                     'status' => Response::HTTP_BAD_REQUEST
                 ]);
             }

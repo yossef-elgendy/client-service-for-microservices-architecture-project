@@ -46,7 +46,7 @@ class ClientController extends Controller
                 if ($validator->fails()) {
 
                     return response()->json([
-                        'errors' => $validator->getMessageBag(),
+                        'errors' => Arr::flatten($validator->getMessageBag()),
                         'status'=>Response::HTTP_BAD_REQUEST
                     ]);
                 }
@@ -124,7 +124,7 @@ class ClientController extends Controller
                 $validator = Validator::make($request->all(), $request->rules());
                 if($validator->fails()) {
                     return response()->json([
-                        'errors' => $validator->getMessageBag(),
+                        'errors' => Arr::flatten($validator->getMessageBag()),
                         'status' =>Response::HTTP_NOT_ACCEPTABLE
                     ]);
                 }

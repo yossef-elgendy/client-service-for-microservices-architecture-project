@@ -65,7 +65,7 @@ class ChildController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'errors'=>$validator->getMessageBag(),
+                    'errors'=> Arr::flatten($validator->getMessageBag()),
                     'status'=>Response::HTTP_BAD_REQUEST
                 ]);
             }
@@ -98,7 +98,7 @@ class ChildController extends Controller
                 return response()->json(
                 [
                     'message' => 'Mediafile not uploaded! Default file is used instead',
-                    'errors' => $mediafile_store_response,
+                    'errors' => [$mediafile_store_response],
                     'data' => new ChildIndexResource($child),
                     'status'=>Response::HTTP_CREATED
                 ]);
@@ -187,7 +187,7 @@ class ChildController extends Controller
             if($validator->fails()){
                 return response()->json([
                     'child' => new ChildIndexResource($child),
-                    'errors'=>$validator->getMessageBag(),
+                    'errors'=>Arr::flatten($validator->getMessageBag()),
                     'status'=>Response::HTTP_BAD_REQUEST
                 ]);
             }
@@ -227,7 +227,7 @@ class ChildController extends Controller
                     return response()->json(
                     [
                         'message' => 'Mediafile not uploaded! Default file is used instead',
-                        'errors' => $mediafile_update_response,
+                        'errors' => [$mediafile_update_response],
                         'data' => new ChildIndexResource($child),
                         'status'=> Response::HTTP_CREATED
                     ]);

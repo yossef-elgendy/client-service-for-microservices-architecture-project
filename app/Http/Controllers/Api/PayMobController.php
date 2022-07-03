@@ -142,7 +142,7 @@ class PayMobController extends Controller
 
         } else {
             return response()->json([
-                'message' => "Unauthorized link to access payment.",
+                'message' => ["Unauthorized link to access payment."],
                 'status' => Response::HTTP_NOT_FOUND,
             ]);
         }
