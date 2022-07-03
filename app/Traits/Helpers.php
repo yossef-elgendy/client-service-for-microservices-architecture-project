@@ -60,7 +60,7 @@ function mediafilePrepare($mediafile, $mediafile_type)
 
 function mediafileUploadDefault($mediafile_data)
 {
-  $path = 'uploads/' . $mediafile_data['model_type'] . '/' . $mediafile_data['mediafile_type'];
+  $path = 'uploads/' . Media::MODEL_TYPE[$mediafile_data['model_type']] . '/' . $mediafile_data['mediafile_type'];
   $path = $path . '/' . Media::DEFAULT_IMAGE_NAME[$mediafile_data['model_type']];
 
   return [
