@@ -34,7 +34,7 @@ class StoreChildRequest extends FormRequest
             'time_table'=> 'nullable|array|min:3',
             'time_table.*'=>'nullable|date',
             'gender' => 'required|integer|in:'.implode(',', array_keys(Child::GENDER)),
-            'mediafile' => 'nullable|file|mimes:jpg,bmp,png',
+            'profile_image' => 'nullable|file|mimes:jpg,bmp,png',
         ];
     }
 }
