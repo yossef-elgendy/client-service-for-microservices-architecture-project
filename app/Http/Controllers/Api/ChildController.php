@@ -9,6 +9,7 @@ use App\Http\Resources\Child\ChildIndexResource;
 use App\Jobs\ClientDispatched\ClientChildUpdateJob;
 use App\Models\Child;
 use App\Models\Media;
+use App\Traits\Helpers;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ChildController extends Controller
 {
+    use Helpers;
     /**
      * Display a listing of the resource.
      *
@@ -71,32 +73,32 @@ class ChildController extends Controller
             $fields = $validator->validated();
             $child = Child::create(Arr::except($fields, ['mediafile']));
 
-            if($request->mediafile) {
+            if($request->file('mediafile')) {
                 $mediafile_data = [
-                  'mediafile' => $request->mediafile,
+                  'mediafile' => $request->file('mediafile'),
                   'mediafile_type' => 'child_image',
                   'model_id' => $child->id,
                   'model_type' => 'App\Child',
                   'is_default' => false
                 ];
             } else {
-                    $mediafile_data = [
+                $mediafile_data = [
                     'mediafile' => null,
                     'mediafile_type' => 'child_image',
                     'model_id' => $child->id,
                     'model_type' => 'App\Child',
                     'is_default' => true
-                    ];
+                ];
             }
 
-            $mediafile = new MediafileController();
-            $mediafile_store_response = $mediafile->store($mediafile_data);
+            
+            $mediafile_store_response = $this->mediafilesManage('store', [$mediafile_data]);
 
             if($mediafile_store_response !== 'success') {
                 return response()->json(
                 [
                     'message' => 'Mediafile not uploaded! Default file is used instead',
-                    'errors' => [$mediafile_store_response],
+                    'errors' => $mediafile_store_response,
                     'data' => new ChildIndexResource($child),
                     'status'=>Response::HTTP_CREATED
                 ]);
@@ -202,29 +204,30 @@ class ChildController extends Controller
             ->onConnection('rabbitmq')
             ->onQueue(config('queue.rabbitmq_queue.provider_service'));
 
-            if($request->mediafile){
+            if($request->file('mediafile')){
 
                 $mediafile_data = [
-                    'mediafile' => $request->mediafile,
+                    'mediafile' => $request->file('mediafile'),
                     'mediafile_type' => 'child_image',
                     'model_id' => $child->id,
                     'model_type' => 'App\Child',
-                    'is_default' => false
+                    'is_default' => false,
+                    'id' => $id
                 ];
 
-                $mediafile = new MediaFileController();
+                
                 $id = Media::where([
                     ['model_type', '=', 'App\Child'],
                     ['model_id', '=', $child->id]
                     ])->get('id');
 
-                $mediafile_update_response = $mediafile->update($mediafile_data, $id);
+                $mediafile_update_response = $this->mediafilesManage('update', [$mediafile_data]);
 
                 if($mediafile_update_response !== 'success') {
                     return response()->json(
                     [
                         'message' => 'Mediafile not uploaded! Default file is used instead',
-                        'errors' => [$mediafile_update_response],
+                        'errors' => $mediafile_update_response,
                         'data' => new ChildIndexResource($child),
                         'status'=> Response::HTTP_CREATED
                     ]);

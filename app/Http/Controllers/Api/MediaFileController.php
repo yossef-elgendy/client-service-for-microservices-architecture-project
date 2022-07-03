@@ -16,7 +16,9 @@ class MediaFileController extends Controller
     public function store($mediafile_data)
     {
         try {
-                $mediafile = $this->mediafileUpload($mediafile_data);
+            $mediafile = $mediafile_data['is_default'] ?
+                $this->mediafileUploadDefault($mediafile_data) :
+                $this->mediafileUpload($mediafile_data);
 
                 if(! is_array($mediafile)) {
                     return $mediafile;
