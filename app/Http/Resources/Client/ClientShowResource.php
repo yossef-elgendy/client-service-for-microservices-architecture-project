@@ -28,7 +28,7 @@ class ClientShowResource extends JsonResource
 
         return [
             "id" => $this->id,
-            "full_name" => $this->fullname,
+            "fullname" => $this->fullname,
             "email"=>$this->email,
             "phone"=>$this->phone,
             "login_type"=> $this->login_type,

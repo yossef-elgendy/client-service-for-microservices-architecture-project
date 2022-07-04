@@ -206,20 +206,21 @@ class ChildController extends Controller
 
             if($request->file('mediafile')){
 
-                $mediafile_data = [
-                    'mediafile' => $request->file('mediafile'),
-                    'mediafile_type' => 'child_image',
-                    'model_id' => $child->id,
-                    'model_type' => 'App\Child',
-                    'is_default' => false,
-                    'id' => $id
-                ];
 
                 
-                $id = Media::where([
+                $mediafile_id = Media::where([
                     ['model_type', '=', 'App\Child'],
                     ['model_id', '=', $child->id]
                     ])->get('id');
+
+                $mediafile_data = [
+                    'mediafile' => $request->file('mediafile'),
+                    'mediafile_type' => 'profile_image',
+                    'model_id' => $child->id,
+                    'model_type' => 'App\Child',
+                    'is_default' => false,
+                    'id' => $mediafile_id
+                ];
 
                 $mediafile_update_response = $this->mediafilesManage('update', [$mediafile_data]);
 
