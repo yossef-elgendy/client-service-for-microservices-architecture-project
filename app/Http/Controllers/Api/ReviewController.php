@@ -31,7 +31,7 @@ class ReviewController extends Controller
 
             if($request->model_type == "course"){
                 $reviews  = Review::where([
-                    ['model_type', '=', 'App\CourseNursery'],
+                    ['model_type', '=', 'App\Course'],
                     ['model_id', '=', $request->model_id]
                     ])->get();
 
@@ -61,7 +61,7 @@ class ReviewController extends Controller
 
 
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+            return response()->json(['errors' => [$e->getMessage()]], Response::HTTP_NOT_FOUND);
 
         }
 
