@@ -71,11 +71,11 @@ class ChildController extends Controller
             }
 
             $fields = $validator->validated();
-            $child = Child::create(Arr::except($fields, ['mediafile']));
+            $child = Child::create(Arr::except($fields, ['profile_image']));
 
-            if($request->file('mediafile')) {
+            if($request->file('profile_image')) {
                 $mediafile_data = [
-                  'mediafile' => $request->file('mediafile'),
+                  'mediafile' => $request->file('profile_image'),
                   'mediafile_type' => 'profile_image',
                   'model_id' => $child->id,
                   'model_type' => 'App\Child',
@@ -204,7 +204,7 @@ class ChildController extends Controller
             ->onConnection('rabbitmq')
             ->onQueue(config('queue.rabbitmq_queue.provider_service'));
 
-            if($request->file('mediafile')){
+            if($request->file('profile_image')){
 
 
                 
@@ -214,7 +214,7 @@ class ChildController extends Controller
                     ])->get('id');
 
                 $mediafile_data = [
-                    'mediafile' => $request->file('mediafile'),
+                    'mediafile' => $request->file('profile_image'),
                     'mediafile_type' => 'profile_image',
                     'model_id' => $child->id,
                     'model_type' => 'App\Child',

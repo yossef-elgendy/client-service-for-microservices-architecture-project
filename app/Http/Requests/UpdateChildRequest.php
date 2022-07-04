@@ -29,7 +29,7 @@ class UpdateChildRequest extends FormRequest
             'name'=>'nullable|string|max:30',
             'client_id'=>'required|exists:clients,id',
             'age'=> 'nullable|integer|max:13',
-            'mediafile' => 'nullable|file|mimes:jpg,bmp,png',
+            'profile_image' => 'nullable|file|mimes:jpg,bmp,png',
         ];
     }
 }
