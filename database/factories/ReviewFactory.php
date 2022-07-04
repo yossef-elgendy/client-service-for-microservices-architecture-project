@@ -37,7 +37,7 @@ class ReviewFactory extends Factory
         return [
             'id' => $this->faker->unique()->randomNumber(2, true),
             'client_id' => $this->faker->randomElement($client_ids),
-            'model_id' => $this->faker->numberBetween($min = 1, $max = 9),
+            'model_id' => $this->faker->numberBetween($min = 1, $max = 5),
             'model_type'=> $this->faker->randomElement(array_keys(Review::TYPE)),
             'content'=> $this->faker->randomElement($contents),
             'rate'=>$this->faker->numberBetween($min = 3, $max = 5)
