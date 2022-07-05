@@ -28,32 +28,17 @@ class ReviewController extends Controller
     public function index(Request $request)
     {
         try {
-
-            if($request->model_type == "course"){
-                $reviews  = Review::where([
-                    ['model_type', '=', 'App\Course'],
-                    ['model_id', '=', $request->model_id]
-                    ])->get();
-
-                    return response()->json([
-                        'reviews' => ReviewResource::collection($reviews),
-                        'status' =>Response::HTTP_ACCEPTED
-                    ]);
-            }
-
-            if ($request->model_type == "nursery") {
-                $reviews  = Review::where([
-                    ['model_type', '=', 'App\Nursery'],
-                    ['model_id', '=', $request->model_id]
-                    ])->get();
-
-                    return response()->json([
-                        'reviews' => ReviewResource::collection($reviews),
-                        'status' =>Response::HTTP_ACCEPTED
-                    ]);
-            }
-
-            $reviews = Review::all();
+            
+            $model_type = $request->model_type ?? null ;
+            $model_id = $request->model_id ?? null ;
+           
+            $reviews = Review::query()
+            ->when($request->has('model_type'), function($query) use($model_type){
+                $query->where('model_type', array_search(ucfirst($model_type), Review::TYPE));
+            })->when($request->has('model_id'), function($query) use($model_id){
+                $query->where('model_id', $model_id);
+            })->get();
+           
             return response()->json([
                 'reviews' => ReviewResource::collection($reviews),
                 'status' => Response::HTTP_ACCEPTED
