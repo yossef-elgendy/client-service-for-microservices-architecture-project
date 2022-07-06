@@ -81,10 +81,13 @@ class ReservationController extends Controller
 
             $reservation_waiting = Reservation::where([
                 ['child_id', '=',$request->child_id],
-                ['status', '=', null]
+                ['status', '=', 0],
+                ['provider_end', '=', 0]
             ])->orWhere([
                 ['child_id', '=',$request->child_id],
-                ['status', '=', 0]
+                ['status', '=', 1],
+                ['provider_end', '=', 0],
+                ['client_end', '=' , 0]
             ])->first();
 
             $reservation_active =  Reservation::where([
@@ -108,6 +111,7 @@ class ReservationController extends Controller
                     'status'=> 401
                 ]);
             }
+            
 
 
             $fields = $validator->validated();
