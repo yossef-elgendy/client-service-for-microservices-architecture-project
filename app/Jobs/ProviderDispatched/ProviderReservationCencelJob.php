@@ -65,7 +65,9 @@ class ProviderReservationCencelJob implements ShouldQueue
                 ->onQueue(config('queue.rabbitmq_queue.api_gateway_service'));
 
 
-            if(isset($this->data['provider_end'])) $reservation->delete();
+            if(isset($this->data['provider_end']) && $this->data['provider_end'] == 1 ) {
+                $reservation->delete();
+            }
 
         } catch (Exception $e){
             echo $e->getMessage();
