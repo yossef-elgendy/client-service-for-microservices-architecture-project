@@ -269,7 +269,7 @@ class ReservationController extends Controller
     public function reservationByChild(Request $request, $id){
         try {
 
-            $reservation = Reservation::where([['child_id', $id], ['client_id', $request->client_id]])->first();
+            $reservation = Reservation::where([['child_id', $id], ['client_id', $request->client_id]])->orderBy('created_at','desc')->first();
 
         
 			if(!$reservation ) {
