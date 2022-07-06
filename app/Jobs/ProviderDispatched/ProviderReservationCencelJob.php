@@ -41,15 +41,13 @@ class ProviderReservationCencelJob implements ShouldQueue
 
          try {
             $reservation = Reservation::findOrFail($this->data['reservation_id']);
-            print_r($reservation);
             $reservation->update([
                 'status' => $this->data['status'],
                 'provider_end'=> $this->data['provider_end'] ?? 0,
                 'reply' => $this->data['reply']
             ]);
 
-            // $client = Client::findOrFail($reservation->client_id);
-            // $client->notify(new ReservationInformation($reservation));
+            
             UserNotificationSendJob::dispatch([
                 'user_id' => $reservation->client_id,
                 'title' => 'Reservation Canceled',
