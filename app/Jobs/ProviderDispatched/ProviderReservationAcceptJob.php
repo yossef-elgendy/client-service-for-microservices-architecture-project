@@ -15,6 +15,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class ProviderReservationAcceptJob implements ShouldQueue
 {
@@ -92,9 +93,11 @@ class ProviderReservationAcceptJob implements ShouldQueue
               ])
                 ->onConnection('rabbitmq')
                 ->onQueue(config('queue.rabbitmq_queue.api_gateway_service'));
-
+            DB::commit();
         } catch (Exception $e){
-            echo $e->getMessage();
+            DB::rollBack();
+
+            $this->fail($e);
         }
 
     }

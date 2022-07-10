@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class ProviderReservationCencelJob implements ShouldQueue
 {
@@ -66,9 +67,11 @@ class ProviderReservationCencelJob implements ShouldQueue
             if(isset($this->data['provider_end']) && $this->data['provider_end'] == 1 ) {
                 $reservation->delete();
             }
-
+            DB::commit();
         } catch (Exception $e){
-            echo $e->getMessage();
+            DB::rollBack();
+
+            $this->fail($e);
         }
     }
 }

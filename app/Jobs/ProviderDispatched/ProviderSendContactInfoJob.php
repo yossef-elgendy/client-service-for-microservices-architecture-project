@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
+
 class ProviderSendContactInfoJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -35,6 +36,7 @@ class ProviderSendContactInfoJob implements ShouldQueue
      */
     public function handle()
     {
+        
         try{
 
             $reservation = Reservation::find($this->data['reservation_id']);
@@ -61,9 +63,11 @@ class ProviderSendContactInfoJob implements ShouldQueue
                 ->onConnection('rabbitmq')
                 ->onQueue(config('queue.rabbitmq_queue.api_gateway_service'));
 
-            
+           
         } catch (\Exception $e) {
-            echo $e->getMessage();
+           
+
+            $this->fail($e);
         }
     }
 }

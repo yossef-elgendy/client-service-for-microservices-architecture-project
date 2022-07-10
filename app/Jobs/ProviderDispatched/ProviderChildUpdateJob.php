@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class ProviderChildUpdateJob implements ShouldQueue
 {
@@ -53,9 +54,11 @@ class ProviderChildUpdateJob implements ShouldQueue
               ])
                 ->onConnection('rabbitmq')
                 ->onQueue(config('queue.rabbitmq_queue.api_gateway_service'));
-
+            DB::commit();
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            DB::rollBack();
+
+            $this->fail($e);
         }
     }
 }

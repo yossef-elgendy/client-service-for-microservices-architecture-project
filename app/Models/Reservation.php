@@ -44,10 +44,18 @@ class Reservation extends Model
     ];
 
     const RESERVATION_STATUS = [
-        '0' => 'not_responded',
+        '0' => 'pending',
+
         '1' => 'reject',
         '2' => 'accept',
-        '3' => 'done'
+        '3' => 'cancelled',
+
+        '4' => 'accept_expired',
+        '5' => 'subscribed',
+
+        '6' => 'ended',
+        '7' => 'reject_cancelled', // client_end
+        '8' => 'reject_expired',
     ];
 
     const PROVIDER_END = [
@@ -71,7 +79,14 @@ class Reservation extends Model
         return static::where([
             ['created_at', '<=', now()->subDays(10)],
             ['status', '=', 0]
-        ]);
+        ]) || static::whereIn(
+            'status',
+            [1, 2]
+        )->where(
+            'updated_at',
+            '<=',
+            now()->subDays(10)
+        );
     }
 
     protected function pruning()

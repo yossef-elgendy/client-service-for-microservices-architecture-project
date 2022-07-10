@@ -89,7 +89,7 @@ class ReviewController extends Controller
 
             } elseif($request->model_type == "course") {
                 ClientCourseNurseryRateJob::dispatch([
-                    'course_nursery_id'=> $review->model_id,
+                    'coursenursery_id'=> $review->model_id,
                     'rate'=> $review->rate
                 ])->onConnection('rabbitmq')->onQueue(config('queue.rabbitmq_queue.provider_service'));
             }

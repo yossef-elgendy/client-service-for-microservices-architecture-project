@@ -79,24 +79,11 @@ class ReservationController extends Controller
                 ]);
             }
 
-            $reservation_waiting = Reservation::where([
-                ['child_id', '=',$request->child_id],
-                ['status', '=', 0],
-                ['provider_end', '=', 0]
-            ])->orWhere([
-                ['child_id', '=',$request->child_id],
-                ['status', '=', 1],
-                ['provider_end', '=', 0],
-                ['client_end', '=' , 0]
-            ])->first();
+            $reservation_waiting = Reservation::where('child_id', '=',$request->child_id)
+            ->whereIn('status', array(1, 0))->first();
 
-            $reservation_active =  Reservation::where([
-                ['child_id', '=',$request->child_id],
-                ['status', '=', 2]
-            ])->orWhere([
-                ['child_id', '=',$request->child_id],
-                ['status', '=', 3]
-            ])->first();
+            $reservation_active =  Reservation::where( 'child_id',$request->child_id)
+            ->whereIn('status', array(2, 5))->first();
 
             if($reservation_waiting){
                     return response()->json([
@@ -211,12 +198,15 @@ class ReservationController extends Controller
                 ]);
 			}
 
-            if($reservation->provider_end) {
-				return response()->json([
-                    'errors' => ['Nursery canceled this reservation.'],
-                    'status' => 401
-                ]);
-			}
+            if (in_array($reservation->status, [3, 4, 5, 6, 7, 8])) {
+                $status = Reservation::RESERVATION_STATUS[$reservation->status ?? 0];
+                return response()->json(
+                  [
+                    'errors' => ["This reservation is {$status}.You can not update it."],
+                    'status' => Response::HTTP_UNAUTHORIZED,
+                  ],
+                );
+            }
 
             $validator = Validator::make($request->all(), $request->rules());
 
@@ -229,31 +219,43 @@ class ReservationController extends Controller
 
             $data = $validator->validated();
 
-            if($reservation->status == 1){
-                $reservation->delete();
-                return response()->json([
-                    'errors' => ['Nursery canceled this reservation already.'],
-                    'status'=> Response::HTTP_ALREADY_REPORTED
-                ]);
-            } else {
+            
+            
 
-                if($request->client_end){
-                    $reservation->update(['client_end'=> $data['client_end']]);
-
-                    ClientReservationCancelJob::dispatch(['reservation_id'=> $reservation->id])
-                    ->onQueue(config('queue.rabbitmq_queue.provider_service'))
-                    ->onConnection('rabbitmq');
-
-                    $reservation->delete();
-
-                    return response()->json([
-                            'message' => 'Your reply will be sent to client',
-                            'status' => Response::HTTP_ACCEPTED
+            if($request->client_end){
+                if(in_array($reservation->status, [0, 1])){
+                    if($reservation->status == 1){
+                        $reservation->update([
+                            'client_end' => 1,
+                            'status' => 7,
+                          ]);
+                    }elseif($reservation->status == 0){
+                        $reservation->update([
+                            'client_end' => 1,
+                            'status' => 3,
                         ]);
-
+                    }
+                } else {
+                    return response()->json([
+                        'message' => 'You can not cancel a non pending reservation.',
+                        'status' => Response::HTTP_ACCEPTED
+                    ]);
                 }
 
+                ClientReservationCancelJob::dispatch(['reservation_id'=> $reservation->id])
+                ->onQueue(config('queue.rabbitmq_queue.provider_service'))
+                ->onConnection('rabbitmq');
+
+                $reservation->delete();
+
+                return response()->json([
+                        'message' => 'Your reply will be sent to nursery',
+                        'status' => Response::HTTP_ACCEPTED
+                    ]);
+
             }
+
+            
 
 
             $reservation->update(['client_end'=> $data['client_end'] ?? 0 ]);

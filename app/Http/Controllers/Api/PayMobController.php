@@ -117,6 +117,8 @@ class PayMobController extends Controller
                     'subscription_status' => $subscription->status
                 ])->onQueue(config('queue.rabbitmq_queue.provider_service'))
                 ->onConnection('rabbitmq');
+                $reservation->update(['status' => 5]);
+                $reservation->delete();
                 return response()->json([
                     'message' => "Subscription has been created, please confirm the payment with your provider.",
                     'status' => Response::HTTP_OK,
@@ -317,6 +319,8 @@ class PayMobController extends Controller
                     'subscription_status' => $subscription->status
                 ])->onQueue(config('queue.rabbitmq_queue.provider_service'))
                 ->onConnection('rabbitmq');
+                $reservation->update(['status' => 5]);
+                $reservation->delete();
             }else {
                 ClientSubscriptionRenewJob::dispatch([
                     'subscription_id'=> $subscription->id,

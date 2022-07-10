@@ -191,9 +191,8 @@ class SubscriptionController extends Controller
     try {
         $subscription = Subscription::where('child_id', $id)->whereHas('reservation',
         function(Builder $query) use($request){
-            $query
-            ->where([['client_id', $request->client_id], ['status', 2]])
-            ->orWhere([['client_id', $request->client_id], ['status', 3]]);
+            $query->withTrashed()
+            ->Where([['client_id', $request->client_id], ['status', 5]]);
         })
         ->orderBy('created_at', 'desc')
         ->first();
