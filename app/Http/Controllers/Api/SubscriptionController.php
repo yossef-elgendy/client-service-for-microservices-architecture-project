@@ -18,29 +18,29 @@ use Symfony\Component\HttpFoundation\Response;
 class SubscriptionController extends Controller
 {
     public function index(Request $request)
-  {
-    try {
-   
-        $client = Client::findOrFail($request->client_id);
-        $subscriptions =  $client->children()
-        ->whereHas('subscription')
-        ->with('subscription')
-        ->get()
-        ->pluck('subscription'); 
-       
+    {
+        try {
+    
+            $client = Client::findOrFail($request->client_id);
+            $subscriptions =  $client->children()
+            ->whereHas('subscription')
+            ->with('subscription')
+            ->get()
+            ->pluck('subscription'); 
+        
 
+            return response()->json([
+            'subscriptions' => SubscriptionIndexResoruce::collection($subscriptions),
+            'status' => Response::HTTP_OK,
+            ]);
+
+        } catch (\Exception $e) {
         return response()->json([
-          'subcriptions' => SubscriptionIndexResoruce::collection($subscriptions),
-          'status' => Response::HTTP_OK,
-        ]);
-
-    } catch (\Exception $e) {
-      return response()->json([
-          'errors' => [$e->getMessage()],
-          'status' => Response::HTTP_NOT_FOUND,
-        ]);
+            'errors' => [$e->getMessage()],
+            'status' => Response::HTTP_NOT_FOUND,
+            ]);
+        }
     }
-  }
 
   public function show(Request $request, $id)
   {
@@ -173,7 +173,7 @@ class SubscriptionController extends Controller
         
 
         return response()->json([
-            'subcritpions' => SubscriptionIndexResoruce::collection($subscriptions),
+            'subscritpions' => SubscriptionIndexResoruce::collection($subscriptions),
             'status' => Response::HTTP_OK,
             ]);
 
