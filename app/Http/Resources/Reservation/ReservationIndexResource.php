@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Reservation;
 
-
+use App\Models\Child;
 use App\Models\Client;
 use App\Models\Reservation;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -30,7 +30,7 @@ class ReservationIndexResource extends JsonResource
             'child'=> [
                 'name' => $this->child->name,
                 'age'=> $this->child->age,
-                'gender'=> $this->child->gender,
+                'gender'=> Child::GENDER[$this->child->gender ?? 0],
                 'id'=> $this->child->id
             ],
 
