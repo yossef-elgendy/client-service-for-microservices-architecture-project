@@ -30,6 +30,7 @@ class ReservationIndexResource extends JsonResource
             'child'=> [
                 'name' => $this->child->name,
                 'age'=> $this->child->age,
+                'gender'=> $this->child->gender,
                 'id'=> $this->child->id
             ],
 
