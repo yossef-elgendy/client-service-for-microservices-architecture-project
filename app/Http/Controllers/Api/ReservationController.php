@@ -40,8 +40,9 @@ class ReservationController extends Controller
 
             return response()->json([
                 'reservations' => ReservationIndexResource::collection($reservations),
-                'status' =>Response::HTTP_ACCEPTED
+                'status' => Response::HTTP_ACCEPTED
             ]);
+
         } catch (Exception $e){
             return response()->json([
                 'errors' => [$e->getMessage()],
@@ -158,18 +159,19 @@ class ReservationController extends Controller
     public function show(Request $request, $id)
     {
         try {
-            $reservation = Reservation::find($id);
-			if((! $reservation || $reservation->client_id != $request->client_id) && !$request->isAdmin ) {
-				return response()->json([
-                    'errors' =>[ 'You can not show this reservation.'],
-                    'status' => Response::HTTP_UNAUTHORIZED
-                ]);
-			}
+                $reservation = Reservation::find($id);
+                if((! $reservation || $reservation->client_id != $request->client_id) && !$request->isAdmin ) {
+                    return response()->json([
+                        'errors' =>[ 'You can not show this reservation.'],
+                        'status' => Response::HTTP_UNAUTHORIZED
+                    ]);
+                }
 
-			return response()->json([
-                'reservation'=> new ReservationIndexResource($reservation),
-                'status'=> Response::HTTP_ACCEPTED
-            ]);
+                return response()->json([
+                    'reservation'=> new ReservationIndexResource($reservation),
+                    'status'=> Response::HTTP_ACCEPTED
+                ]);
+                
 		} catch (\Exception $e) {
 			return response()->json([
                 'errors' => [$e->getMessage()],
