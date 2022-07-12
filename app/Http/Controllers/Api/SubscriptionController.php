@@ -173,7 +173,7 @@ class SubscriptionController extends Controller
         
 
         return response()->json([
-            'subscritpions' => SubscriptionIndexResoruce::collection($subscriptions),
+            'subscriptions' => SubscriptionIndexResoruce::collection($subscriptions),
             'status' => Response::HTTP_OK,
             ]);
 
