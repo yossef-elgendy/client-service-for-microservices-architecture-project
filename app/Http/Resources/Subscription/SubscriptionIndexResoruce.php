@@ -18,7 +18,7 @@ class SubscriptionIndexResoruce extends JsonResource
         return [
             'id' => $this->id,
             'nursery_id' => $this->nursery_id,
-            'reservation_id'=> $this->reservation->id,
+            'reservation_id'=> $this->reservation_id,
             'child_name' => $this->child->name,
             'status' => Subscription::SUBSCRIPTION_STATUS[$this->status ?? 0],
             'start_date' => $this->start_date,
