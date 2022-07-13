@@ -10,6 +10,7 @@ use App\Models\Client;
 use App\Models\Order;
 use App\Models\Subscription;
 use BaklySystems\PayMob\Facades\PayMob;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator as Validator;
 use Symfony\Component\HttpFoundation\Response ;
 
@@ -102,9 +103,9 @@ class PayMobController extends Controller
             ],[
                 'start_date' => $reservation->reservation_start_date,
                 'due_date' => date('Y-m-d', strtotime($reservation->reservation_start_date. ' + 1 months')),
-                'payment_date' => null,
+                'payment_date' =>  Carbon::now()->toDateTimeString(),
                 'payment_method' => $payment_method ?? 0,
-                'status' => 0
+                'status' => 1
             ]);
 
             if(!$this->renew){
@@ -129,9 +130,9 @@ class PayMobController extends Controller
                     'subscription_id'=> $subscription->id,
                     'start_date' => $subscription->start_date,
                     'due_date' => date('Y-m-d', strtotime($subscription->start_date. ' + 1 months')),
-                    'payment_date' => null,
+                    'payment_date' =>  Carbon::now()->toDateTimeString(),
                     'payment_method' => $subscription->payment_method,
-                    'status' => 0,
+                    'status' => 1,
                 ])->onQueue(config('queue.rabbitmq_queue.provider_service'))
                 ->onConnection('rabbitmq');
                 return response()->json([
