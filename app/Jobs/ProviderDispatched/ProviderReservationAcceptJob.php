@@ -43,7 +43,7 @@ class ProviderReservationAcceptJob implements ShouldQueue
     public function handle()
     {
         // Need {reservation_id, reply, client_id, courses:[{id,cost}, {id,cost}], subscription_fee}
-
+        DB::beginTransaction();
         try {
             $reservation = Reservation::findOrFail($this->data['reservation_id']);
             $reservation->update([
@@ -55,7 +55,7 @@ class ProviderReservationAcceptJob implements ShouldQueue
             ]);
             
 
-            $totalCost = $this->data['subscription_fee'] ?? 0;
+            $totalCost = floatval($this->data['subscription_fee']) ?? 0;
             if(isset($this->data['courses']))
             {
                 foreach($this->data['courses'] as $course){
@@ -79,7 +79,8 @@ class ProviderReservationAcceptJob implements ShouldQueue
             UserNotificationSendJob::dispatch([
                 'user_id' => $reservation->client_id,
                 'title' => 'Reservation Accepted',
-                'body' => '',
+                'type' => 'reservation_accept',
+                'body' => 'The reservation for '.ucfirst($reservation->child->name).' has been accepted by the nursery. please confirm your subcription by paying.',
                 'data' => [
                   'reservation_id' => $reservation->id,
                   'child_name' => $reservation->child->name,

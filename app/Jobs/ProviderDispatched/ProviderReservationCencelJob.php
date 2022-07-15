@@ -39,7 +39,7 @@ class ProviderReservationCencelJob implements ShouldQueue
     public function handle()
     {
          // Need {reservation_id, reply, client_id}
-
+        DB::beginTransaction();
          try {
             $reservation = Reservation::findOrFail($this->data['reservation_id']);
             $reservation->update([
@@ -52,7 +52,11 @@ class ProviderReservationCencelJob implements ShouldQueue
             UserNotificationSendJob::dispatch([
                 'user_id' => $reservation->client_id,
                 'title' => 'Reservation Canceled',
-                'body' => '',
+                'type' => 'reservation_cancel',
+                'body' => isset($this->data['reply'])?
+                'Reservation for '.ucfirst($reservation->child->name).' has been canceled by the nursery.
+                The nursery replied with: \"'.$this->data['reply'].'\"'
+                : 'Reservation for '.ucfirst($reservation->child->name).' has been canceled by the nursery.',
                 'data' => [
                   'reservation_id' => $reservation->id,
                   'child_name' => $reservation->child->name,

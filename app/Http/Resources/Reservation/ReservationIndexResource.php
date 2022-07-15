@@ -4,6 +4,7 @@ namespace App\Http\Resources\Reservation;
 
 use App\Models\Child;
 use App\Models\Client;
+use App\Models\Order;
 use App\Models\Reservation;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,14 +19,15 @@ class ReservationIndexResource extends JsonResource
     public function toArray($request)
     {
         $client = Client::find($this->client_id);
+        $order = Order::where('reservation_id', $this->id)->first();
         return [
             'id'=>$this->id,
             'parent_name'=> $client->fullname,
             'nursery_id'=> $this->nursery_id,
             'timetable_id'=>$this->child->timetable_id,
 
-            'order_id'=> $this->order?->id,
-            'price'=> $this->order?->totalCost,
+            'order_id'=> $order->id,
+            'price'=> $order->totalCost,
 
             'child'=> [
                 'name' => $this->child->name,

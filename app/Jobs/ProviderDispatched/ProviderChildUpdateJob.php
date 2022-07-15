@@ -37,6 +37,7 @@ class ProviderChildUpdateJob implements ShouldQueue
      */
     public function handle()
     {
+        DB::beginTransaction();
         try {
             $child = Child::findOrFail($this->data['child_id']);
             $child->update(Arr::except($this->data, ['child_id']));
@@ -44,7 +45,8 @@ class ProviderChildUpdateJob implements ShouldQueue
             UserNotificationSendJob::dispatch([
                 'user_id' => $child->client_id,
                 'title' => 'Child Updated',
-                'body' => '',
+                'type' => 'child_update',
+                'body' => "Your child " . ucfirst($child->name) . " has been updated by nursery.",
                 'data' => [
                   'child_id' => $child->id,
                   'child_name' => $child->name,

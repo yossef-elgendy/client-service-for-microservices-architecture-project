@@ -53,7 +53,8 @@ class ProviderSendContactInfoJob implements ShouldQueue
             UserNotificationSendJob::dispatch([
                 'user_id' => $reservation->client_id,
                 'title' => 'Provider Info',
-                'body' => '',
+                'type' => 'provider_info',
+                'body' => 'Provider info has been recieved for your child '.ucfirst($reservation->child->name).' rservation.',
                 'data' => [
                   'name' => $this->data['name'],
                   'location' => $this->data['location'],
