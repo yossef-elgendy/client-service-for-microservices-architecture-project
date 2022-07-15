@@ -56,9 +56,11 @@ class ProviderSendContactInfoJob implements ShouldQueue
                 'type' => 'provider_info',
                 'body' => 'Provider info has been recieved for your child '.ucfirst($reservation->child->name).' rservation.',
                 'data' => [
+                  'reservation_id'=> $this->data['reservation_id'],
                   'name' => $this->data['name'],
                   'location' => $this->data['location'],
                   'phone' => $this->data['phone'],
+                  'location_details' => $this->data['location_details']
                 ],
               ])
                 ->onConnection('rabbitmq')

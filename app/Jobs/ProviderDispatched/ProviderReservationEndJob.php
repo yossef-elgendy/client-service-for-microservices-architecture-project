@@ -43,7 +43,6 @@ class ProviderReservationEndJob implements ShouldQueue
             $reservation->update([
                 'status' => $this->data['status'],
                 'provider_end'=> 1,
-                'reply' => $this->data['reply']
             ]);
 
             
