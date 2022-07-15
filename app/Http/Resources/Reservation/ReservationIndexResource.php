@@ -26,8 +26,8 @@ class ReservationIndexResource extends JsonResource
             'nursery_id'=> $this->nursery_id,
             'timetable_id'=>$this->child->timetable_id,
 
-            'order_id'=> $order->id,
-            'price'=> $order->totalCost,
+            'order_id'=> $order->id ?? null,
+            'price'=> $order->totalCost?? null,
 
             'child'=> [
                 'name' => $this->child->name,
