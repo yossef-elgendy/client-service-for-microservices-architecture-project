@@ -40,7 +40,7 @@ class ProviderReservationRejectJob implements ShouldQueue
             $reservation = Reservation::findOrFail($this->data['reservation_id']);
             $reservation->update([
                 'status' => $this->data['status'],
-                'provider_end'=> $this->data['provider_end'] ?? 0,
+                'provider_end'=> 0,
                 'reply' => $this->data['reply']
             ]);
 
@@ -62,9 +62,7 @@ class ProviderReservationRejectJob implements ShouldQueue
                 ->onQueue(config('queue.rabbitmq_queue.api_gateway_service'));
 
 
-            if(isset($this->data['provider_end']) && $this->data['provider_end'] == 1 ) {
-                $reservation->delete();
-            }
+            
             DB::commit();
         } catch (Exception $e){
             DB::rollBack();

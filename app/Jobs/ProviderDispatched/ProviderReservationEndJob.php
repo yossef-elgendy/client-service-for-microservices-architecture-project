@@ -42,7 +42,8 @@ class ProviderReservationEndJob implements ShouldQueue
             $reservation = Reservation::findOrFail($this->data['reservation_id']);
             $reservation->update([
                 'status' => $this->data['status'],
-                'provider_end'=> $this->data['provider_end'] ?? 0,
+                'provider_end'=> 1,
+                'reply' => $this->data['reply']
             ]);
 
             
@@ -50,7 +51,8 @@ class ProviderReservationEndJob implements ShouldQueue
                 'user_id' => $reservation->client_id,
                 'title' => 'Reservation Ended',
                 'type' => 'reservation_ended',
-                'body' => 'Reservation for '.ucfirst($reservation->child->name).' has been ended by the nursery.',
+                'body' => 'Reservation for '.ucfirst($reservation->child->name).' has been ended by the nursery.
+                The nursery replied with: '.$this->data['reply'],
                 'data' => [
                   'reservation_id' => $reservation->id,
                   'child_name' => $reservation->child->name,
@@ -62,9 +64,9 @@ class ProviderReservationEndJob implements ShouldQueue
                 ->onQueue(config('queue.rabbitmq_queue.api_gateway_service'));
 
 
-            if(isset($this->data['provider_end']) && $this->data['provider_end'] == 1 ) {
-                $reservation->delete();
-            }
+           
+            $reservation->delete();
+            
             DB::commit();
         } catch (Exception $e){
             DB::rollBack();
