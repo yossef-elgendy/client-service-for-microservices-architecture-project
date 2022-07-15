@@ -53,10 +53,8 @@ class ProviderReservationCencelJob implements ShouldQueue
                 'user_id' => $reservation->client_id,
                 'title' => 'Reservation Canceled',
                 'type' => 'reservation_cancel',
-                'body' => isset($this->data['reply'])?
-                'Reservation for '.ucfirst($reservation->child->name).' has been canceled by the nursery.
-                The nursery replied with: \"'.$this->data['reply'].'\"'
-                : 'Reservation for '.ucfirst($reservation->child->name).' has been canceled by the nursery.',
+                'body' => 'Reservation for '.ucfirst($reservation->child->name).' has been canceled by the nursery.
+                The nursery replied with: '.$this->data['reply'],
                 'data' => [
                   'reservation_id' => $reservation->id,
                   'child_name' => $reservation->child->name,
