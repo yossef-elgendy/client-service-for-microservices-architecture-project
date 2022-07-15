@@ -2,25 +2,22 @@
 
 namespace App\Jobs\ProviderDispatched;
 
-use App\Jobs\ServicesDispatched\UserNotificationSendJob;
-use App\Models\Client;
-use App\Models\Reservation;
-use App\Notifications\Recieved\ReservationInformation;
-use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Jobs\ServicesDispatched\UserNotificationSendJob;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
-class ProviderReservationCencelJob implements ShouldQueue
+use App\Models\Reservation;
+
+class ProviderReservationRejectJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $data;
-
     /**
      * Create a new job instance.
      *
@@ -28,7 +25,7 @@ class ProviderReservationCencelJob implements ShouldQueue
      */
     public function __construct($data)
     {
-        $this->data = $data;
+        $this->data = $data ;
     }
 
     /**
@@ -38,7 +35,6 @@ class ProviderReservationCencelJob implements ShouldQueue
      */
     public function handle()
     {
-         // Need {reservation_id, reply, client_id}
         DB::beginTransaction();
          try {
             $reservation = Reservation::findOrFail($this->data['reservation_id']);
@@ -51,9 +47,9 @@ class ProviderReservationCencelJob implements ShouldQueue
             
             UserNotificationSendJob::dispatch([
                 'user_id' => $reservation->client_id,
-                'title' => 'Reservation Canceled',
-                'type' => 'reservation_cancel',
-                'body' => 'Reservation for '.ucfirst($reservation->child->name).' has been canceled by the nursery.
+                'title' => 'Reservation Rejected',
+                'type' => 'reservation_reject',
+                'body' => 'Reservation for '.ucfirst($reservation->child->name).' has been rejected by the nursery.
                 The nursery replied with: '.$this->data['reply'],
                 'data' => [
                   'reservation_id' => $reservation->id,
