@@ -65,3 +65,7 @@ Make sure you have [Composer](https://getcomposer.org/) installed on your machin
 ### Usage
 
 Once the installation is complete, you can explore the API endpoints and integrate this service with the client-side application for nursery search functionality.
+
+### Acknowledgments
+
+This project is part of a Bachelor's thesis and microservices architecture.
